@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Confirm your account | Newcastle-under-Lyme Borough Council </title>
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta name="description" content="Newcastle-under-Lyme Borough Council | Customer Portal">
+	<meta name="author" content="Newcastle-under-Lyme Borough Council ">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<!-- FontAwesome JS-->
+	<script defer src="/assets/plugins/fontawesome/js/all.min.js"></script>
+
+	<!-- App CSS -->
+	<link id="theme-style" rel="stylesheet" href="/assets/css/portal.css">
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-5DD24YM4K2"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-5DD24YM4K2');
+	</script>
+	<style>
+		.next-step:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+	</style>
+
+</head>
+
+<body class="app app-signup p-0 whitebg">
+	<div class="row g-0">
+		<div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
+			<div class="d-flex flex-column align-content-end">
+				<div class="app-auth-body mx-auto">
+					<div class="app-auth-branding mb-4"><a class="app-logo" href="index.html"><img class="nulbclogo me-2" src="/assets/images/nulbc-black.png" alt="logo"></a></div>
+
+					<div class="auth-form-container text-start mx-auto">
+						
+
+						<div class="overlay-content p-3 p-lg-4 rounded text-center">
+							<img class="emailverify mb-1" src="/assets/images/emailverification/EmailVerification.png" alt="Image of an email">
+							<h2 class="overlay-title">Confirm your email address!</h2>
+							<p>We've sent a confirmation email to: <strong><span id="confirmationEmail"></span></strong></p>
+							<div class="mb-4">Simply click the link to verify your email. You’ll then be able to manage your council services, as well as adding other residential or business accounts to your profile, if you wish.</div>
+							<div><a class="btn app-btn-primary" href="#">Login to your account</a></div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-5 col-lg-6 h-100 auth-background-col">
+			<div class="auth-background-holder">
+			</div>
+			<div class="auth-background-mask"></div>
+			<div class="auth-background-overlay p-3 p-lg-5">
+				<div class="d-flex flex-column align-content-end h-100">
+					<div class="h-100"></div>
+					<div class="overlay-content p-3 p-lg-4 rounded">
+						<h1 class="overlay-title">Newcastle-under-Lyme Borough Council Portal</h1>
+						<div><strong>One Council. One Account.</strong> Our combined resident and business portal allows you to manage all Council services in one portal, with one login. It's quick and easy to sign up!</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+
+<script>
+  const email = sessionStorage.getItem('signupEmail');
+  if (email) {
+    document.getElementById('confirmationEmail').textContent = email;
+  }
+</script>
+
+
+
+
+</body>
+
+</html>

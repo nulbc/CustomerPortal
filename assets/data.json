@@ -1,0 +1,520 @@
+{
+  "success": true,
+  "messages": [
+    "string"
+  ],
+  "customer": [
+    {
+      "partyId": "123456",
+      "title": "Mr",
+      "firstname": "John",
+      "lastname": "Bloggs",
+      "companyName": "string",
+      "contactAddress": {
+        "oneLiner": "123 High Street, Newcastle-under-Lyme, Staffordshire, ST1 5AA",
+        "lines": [
+          "123 High Street",
+          "Newcastle-under-Lyme",
+          "Staffordshire"
+        ],
+        "postcode": "ST1 5AA",
+        "addressType": "Home",
+        "startDate": "2025-01-01"
+      },
+      "contactDetails": {
+        "email": "john.bloggs@demo.com",
+        "homePhone": "01782111222",
+        "mobilePhone": "07912345678",
+        "workPhone": "",
+        "paperlessEmail": "john.bloggs@demo.com",
+        "paperlessBilling": true,
+        "preferredChannel": "",
+        "preferredChannelValue": ""
+      }
+    }
+  ],
+  "accountsForParty": [
+    {
+      "accountid": 0,
+      "accountType": "string",
+      "property": {
+        "propertyReference": "string",
+        "uprn": "string",
+        "lineOne": "string",
+        "oneLiner": "string",
+        "address": [
+          "string"
+        ],
+        "postcode": "string",
+        "propertyBand": "string",
+        "rateableValue": "string"
+      },
+      "liabilityStartDate": "string",
+      "liabilityEndDate": "string",
+      "accountStatus": "string",
+      "accountBalance": "string",
+      "accountAddress": "string",
+      "billingPeriods": [
+        {
+          "year": "string",
+          "financialYear": "string",
+          "fromDate": "string",
+          "toDate": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "id": "3123456",
+      "name": "123 High Street, Newcastle, Staffordshire, ST1 1AA",
+      "role": "Owner",
+      "type": "Residential",
+      "responseparty": "Y",
+      "startdate": "2021-01-01",
+      "enddate": ""
+    },
+    {
+      "id": "B123456",
+      "name": "John's Bakery, Newcastle-under-Lyme, Staffordshire, ST1 1AA",
+      "role": "Owner",
+      "type": "Business",
+      "responseparty": "Y",
+      "startdate": "2025-01-01",
+      "enddate": ""
+    },
+    {
+      "id": "3987654",
+      "name": "987 Lower Street, Newcastle-under-Lyme, Staffordshire, ST1 1AA",
+      "role": "Family Member",
+      "type": "Residential",
+      "responseparty": "N",
+      "startdate": "2025-01-01",
+      "enddate": "2022-12-01"
+    },
+    {
+      "id": "B1234567",
+      "name": "John's Bakery2, Newcastle-under-Lyme, Staffordshire, ST1 1AA",
+      "role": "Owner",
+      "type": "Business",
+      "responseparty": "Y",
+      "startdate": "2025-01-01",
+      "enddate": ""
+    }
+  ],
+  "accountActivities": [
+    {
+      "accountid": "3123456",
+      "accountType": "Residential",
+      "accountAddress": "123 High Street, Newcastle, Staffordshire, ST1 1AA",
+      "years": [
+        {
+          "year": "2025",
+          "yearDisplay": "2025/26",
+          "liablePersons": "Mr John Bloggs & Mrs Annie Bloggs",
+          "liabilityStartDate": "2025-04-01",
+          "liabilityEndDate": "2026-03-31",
+          "instalmentsDue": "1st Monthly",
+          "currentArrearsOrCredits": "0.00",
+          "outStandingBalance": "150.00",
+          "balanceBroughtForward": "0.00",
+          "liabilities": "",
+          "discounts": [
+            {
+              "name": "Single Person Discount",
+              "startDate": "2025-04-01",
+              "endDate": "2026-03-31"
+            },
+            {
+              "name": "Council Tax Reduction",
+              "startDate": "2025-04-01",
+              "endDate": "2026-03-31"
+            }
+          ],
+          "payments": "",
+          "outstandingBalanceAnnual": "250.00",
+          "paymentMethod": "Direct Debit",
+          "paymentFrequency": "12 Months",
+          "instalments": [
+            {
+              "dueDate": "2025-12-01",
+              "amount": "125.00"
+            },
+            {
+              "dueDate": "2026-01-01",
+              "amount": "130.00"
+            }
+          ],
+          "paymentsMade": [
+            {
+              "dueDate": "2025-11-01",
+              "paymentMethod": "Direct Debit",
+              "amount": "150.99"
+            }
+          ],
+          "nextPaymentDue": {
+            "dueDate": "2025-12-01",
+            "amount": "125.00"
+          },
+          "paymentsSummary": {
+            "paymentYears": [
+              {
+                "year": "string",
+                "financialYear": "string",
+                "payments": [
+                  {
+                    "dueDate": "string",
+                    "paymentMethod": "string",
+                    "amount": "string"
+                  }
+                ]
+              }
+            ],
+            "lastPayment": {
+              "dueDate": "string",
+              "paymentMethod": "string",
+              "amount": "string"
+            }
+          }
+        },
+        {
+          "year": "2024",
+          "yearDisplay": "2024/25",
+          "liablePersons": "Mr John Bloggs",
+          "liabilityStartDate": "2024-04-01",
+          "liabilityEndDate": "2025-03-31",
+          "instalmentsDue": "1st Monthly",
+          "currentArrearsOrCredits": "0.00",
+          "outStandingBalance": "150.00",
+          "balanceBroughtForward": "0.00",
+          "liabilities": "",
+          "discounts": [
+            {
+              "name": "Single Person Discount",
+              "startDate": "2024-04-01",
+              "endDate": "2025-03-31"
+            }
+          ],
+          "payments": "",
+          "outstandingBalanceAnnual": "250.00",
+          "paymentMethod": "Direct Debit",
+          "paymentFrequency": "12 Months",
+          "instalments": [
+            {
+              "dueDate": "2024-12-01",
+              "amount": "125.00"
+            },
+            {
+              "dueDate": "2025-01-01",
+              "amount": "130.00"
+            }
+          ],
+          "paymentsMade": [
+            {
+              "dueDate": "2024-11-01",
+              "paymentMethod": "Direct Debit",
+              "amount": "150.99"
+            }
+          ],
+          "nextPaymentDue": {
+            "dueDate": "2024-12-01",
+            "amount": "125.00"
+          },
+          "paymentsSummary": {
+            "paymentYears": [
+              {
+                "year": "string",
+                "financialYear": "string",
+                "payments": [
+                  {
+                    "dueDate": "string",
+                    "paymentMethod": "string",
+                    "amount": "string"
+                  }
+                ]
+              }
+            ],
+            "lastPayment": {
+              "dueDate": "string",
+              "paymentMethod": "string",
+              "amount": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "accountid": "B123456",
+      "accountType": "Business",
+      "accountAddress": "Unit 1, Commercial Road, Newcastle, Staffordshire, ST1 1AA",
+      "years": [
+        {
+          "year": "2025",
+          "yearDisplay": "2025/26",
+          "liabilityStartDate": "2025-04-01",
+          "liabilityEndDate": "2026-03-31",
+          "instalmentsDue": "1st Monthly",
+          "currentArrearsOrCredits": "0.00",
+          "outStandingBalance": "150.00",
+          "balanceBroughtForward": "0.00",
+          "liabilities": "",
+          "discounts": [
+            {
+              "name": "Small Business",
+              "startDate": "2025-04-01",
+              "endDate": "2026-03-31"
+            }
+          ],
+          "payments": "",
+          "outstandingBalanceAnnual": "250.00",
+          "paymentMethod": "Direct Debit",
+          "paymentFrequency": "12 Months",
+          "instalments": [
+            {
+              "dueDate": "2025-12-01",
+              "amount": "125.00"
+            },
+            {
+              "dueDate": "2026-01-01",
+              "amount": "130.00"
+            }
+          ],
+          "paymentsMade": [
+            {
+              "dueDate": "2025-11-01",
+              "paymentMethod": "Direct Debit",
+              "amount": "150.99"
+            }
+          ],
+          "nextPaymentDue": {
+            "dueDate": "2025-12-01",
+            "amount": "125.00"
+          },
+          "paymentsSummary": {
+            "paymentYears": [
+              {
+                "year": "string",
+                "financialYear": "string",
+                "payments": [
+                  {
+                    "dueDate": "string",
+                    "paymentMethod": "string",
+                    "amount": "string"
+                  }
+                ]
+              }
+            ],
+            "lastPayment": {
+              "dueDate": "string",
+              "paymentMethod": "string",
+              "amount": "string"
+            }
+          }
+        }
+      ]
+    }],
+    "mynotifications": [
+      {
+        "id": 123,
+        "subject": "New Council Tax Bill available",
+        "description": "Your annual bill is now available for Council Tax year 2026/27. Your bill has been sent via email.",
+        "category": "Council Tax",
+        "type": "alert",
+        "date": "2025-11-01",
+        "isread": "N"
+      },
+      {
+        "id": 456,
+        "subject": "Missed Collection - Garden Waste",
+        "description": "Due to roadworks, we are unable to collect your garden waste bin. Please leave it out and we will collect as soon as possible.",
+        "category": "Waste",
+        "type": "information",
+        "date": "2025-10-30",
+        "isread": "Y"
+      }
+    ],
+    "myservicerequests": [
+      {
+        "id": 456,
+        "accountid": "3123456",
+        "subject": "Garden Waste 2026",
+        "category": "Waste",
+        "status": "Closed"
+      },
+      {
+        "id": 789,
+        "accountid": "3123456",
+        "subject": "Single Person Discount review 2026",
+        "category": "Council Tax",
+        "status": "Open"
+      },
+      {
+        "id": 123,
+        "accountid": "3987654",
+        "subject": "Single Person Discount review 2024",
+        "category": "Council Tax",
+        "status": "Open"
+      },
+      {
+        "id": 123456,
+        "accountid": "B123456",
+        "subject": "Small Business relief review 2026",
+        "category": "Council Tax",
+        "status": "Open"
+      }
+    ],
+    "mysubscriptions": [
+      {
+        "id": 1234,
+        "accountid": "3123456",
+        "name": "Council Tax 2026/27",
+        "category": "Council Tax",
+        "status": "Active",
+        "expiry": "2025-11-30",
+        "autorenew": "N",
+        "amount": "",
+        "paymentcardid": ""
+      },
+      {
+        "id": 987654,
+        "accountid": "3987654",
+        "name": "Premises Licence",
+        "category": "Licencing",
+        "status": "Active",
+        "expiry": "2026-02-09",
+        "autorenew": "N",
+        "amount": "300.00",
+        "paymentcardid": 12345
+      },
+      {
+        "id": 98765,
+        "accountid": "3987654",
+        "name": "Garden Waste",
+        "category": "Garden Waste",
+        "status": "Active",
+        "expiry": "2026-02-09",
+        "autorenew": "N",
+        "amount": "300.00",
+        "paymentcardid": 12345
+      },
+      {
+        "id": 987653,
+        "accountid": "B123456",
+        "name": "Premises Licence2",
+        "category": "Licencing",
+        "status": "Expired",
+        "expiry": "2025-11-16",
+        "autorenew": "N",
+        "amount": "300.00",
+        "paymentcardid": 12345
+      }
+    ],
+    "businessnndr": [
+      {
+        "id": 1234,
+        "accountid": "B123456",
+        "name": "NNDR",
+        "status": "Open",
+        "expiry": "2025-11-16",
+        "autorenew": "Open",
+        "amount": "",
+        "paymentcardid": ""
+      }
+    ],
+    "leasedpremises": [
+      {
+        "id": "Lease-12345",
+        "accountid": "B123456",
+        "propertyid": "P98754",
+        "status": "Active",
+        "expiry": "2029-01-01",
+        "leasetype": "Full Repairing",
+        "payments": [
+          {
+            "year": "2025/26",
+            "startdate": "2025-04-01",
+            "enddate": "2026-03-31",
+            "annualcharge": "15000.00",
+            "paidtoDate": "5000.00",
+            "remainingbalance": "10000.00",
+            "paymentMethodDescription": "Direct Debit",
+            "paymentFrequency": "1st - Monthly",
+            "instalments": [
+              {
+                "dueDate": "2025-12-01",
+                "amount": "1500.00"
+              },
+              {
+                "dueDate": "2026-01-01",
+                "amount": "1500.00"
+              }
+            ],
+            "nextpayment": [
+              {
+                "dueDate": "2025-12-01",
+                "amount": "1500.00"
+              }
+            ]
+          },
+          {
+            "year": "2024/25",
+            "startdate": "2024-04-01",
+            "enddate": "2025-03-31",
+            "annualcharge": "15000.00",
+            "paidtoDate": "15000.00",
+            "remainingbalance": "0.00",
+            "paymentMethodDescription": "Direct Debit",
+            "paymentFrequency": "1st - Monthly",
+            "instalments": [],
+            "nextpayment": []
+          }
+        ]
+      },
+      {
+        "id": "Lease-45678",
+        "accountid": "B123456",
+        "propertyid": "P98754",
+        "status": "Expired",
+        "expiry": "2025-01-01",
+        "leasetype": "Full Repairing",
+        "payments": []
+      }
+    ],
+    "properties": [
+      {
+        "id": "P98754",
+        "name": "Unit A",
+        "address": [
+          {
+            "line1": "Commercial Industrial Estate",
+            "line2": "Commercial Road",
+            "line3": "Newcastle-under-Lyme",
+            "line4": "Staffordshire",
+            "postcode": "ST1 1AA"
+          }
+        ]
+      }
+    ],
+    "bincollections": [
+      {
+        "date": "2025-11-21",
+        "type": "food waste",
+        "description": "Food scraps..."
+      },
+      {
+        "date": "2025-11-22",
+        "type": "recycling",
+        "description": "Paper, cardboard, plastic bottles, tins."
+      },
+      {
+        "date": "2025-11-23",
+        "type": "garden waste",
+        "description": "Grass cuttings, leaves."
+      },
+      {
+        "date": "2025-11-24",
+        "type": "non-recyclable",
+        "description": "General household waste that cannot be recycled."
+      }
+    ]
+  }

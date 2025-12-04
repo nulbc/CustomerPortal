@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Customer Portal | Newcastle-under-Lyme Borough Council </title>
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta name="description" content="Newcastle-under-Lyme Borough Council | Customer Portal">
+	<meta name="author" content="Newcastle-under-Lyme Borough Council ">
+	<link rel="shortcut icon" href="favicon.ico">
+
+	<!-- FontAwesome JS-->
+	<script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+
+	<!-- App CSS -->
+	<link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-5DD24YM4K2"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-5DD24YM4K2');
+	</script>
+
+	<style>
+		#pageContent {
+			opacity: 0;
+			transition: opacity 0.5s ease-in-out;
+			display: none;
+		}
+
+		.show {
+			display: block !important;
+			opacity: 1 !important;
+		}
+	</style>
+
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body class="app">
+	<header class="app-header fixed-top">
+		<div class="app-header-inner">
+			<div class="container-fluid py-2">
+				<div class="app-header-content">
+					<div class="row justify-content-between align-items-center">
+						<!--Menu toggler-->
+						<div class="col-auto">
+							<a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none whiteicon" href="#">
+								<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img">
+									<title>Menu</title>
+									<path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>
+								</svg>
+							</a>
+						</div>
+						<!--Logo-->
+						<div class="col">
+							<a href="index.html"><img class="nulbclogo me-2" src="/assets/images/nulbc.png" alt="logo"><span class="logo-text"></span></a>
+
+						</div>
+
+
+						<!--Notifications/Profile icons-->
+						<div class="app-utilities col-auto">
+							<!--Notifications-->
+							<div class="app-utility-item app-notifications-dropdown dropdown">
+								<a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Notifications">
+									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon whiteicon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
+										<path fill-rule="evenodd" d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+									</svg>
+									<span class="icon-badge" id="mynotificationscount-header"></span>
+								</a>
+								<div class="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
+									<div class="dropdown-menu-header p-3">
+										<h5 class="dropdown-menu-title mb-0">Notifications</h5>
+									</div>
+									<div class="dropdown-menu-content">
+										<div id="notificationModal"></div>
+									</div>
+									<div class="dropdown-menu-footer p-2 text-center">
+										<a href="notifications.html">View all</a>
+									</div>
+
+								</div>
+							</div>
+							<!--Profile icon-->
+							<div class="app-utility-item app-user-dropdown dropdown">
+								<a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle icon whiteicon" viewBox="0 0 16 16">
+										<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+										<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+									</svg></a>
+								<ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
+									<li><a class="dropdown-item"><strong>Welcome back, <span id="customerfirstname-profile"></span>!</strong></a></li>
+									<li><a class="dropdown-item" href="account.html">My Profile</a></li>
+									<li><a class="dropdown-item" href="notifications.html">My Notifications</a></li>
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li><a class="dropdown-item" href="login.html">Log Out</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="app-sidepanel" class="app-sidepanel">
+			<div id="sidepanel-drop" class="sidepanel-drop"></div>
+			<div class="sidepanel-inner d-flex flex-column">
+				<a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+				<div class="app-branding">
+					<span class="logo-text"></span></a>
+
+				</div>
+				<!--Navigation menu-->
+				<nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+					<ul class="app-menu list-unstyled accordion" id="menu-accordion">
+						<!-- Nav-HOME-->
+						<li class="nav-item">
+							<a class="nav-link" href="index.html">
+								<span class="nav-icon">
+									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-columns-gap" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<path fill-rule="evenodd" d="M6 1H1v3h5V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12h-5v3h5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8H1v7h5V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6h-5v7h5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z" />
+									</svg>
+								</span>
+								<span class="nav-link-text">Home</span>
+							</a>
+						</li>
+						<!-- Nav-SERVICEREQUEST-->
+						<li class="nav-item">
+
+							<a class="nav-link" href="servicerequest.html">
+								<span class="nav-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ol" viewBox="0 0 16 16">
+										<path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5" />
+										<path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635z" />
+									</svg>
+								</span>
+								<span class="nav-link-text">My Service Requests</span>
+							</a>
+						</li>
+						<!-- Nav-SUBSCRIPTIONS-->
+						<li class="nav-item">
+							<a class="nav-link" href="subscriptions.html">
+								<span class="nav-icon">
+									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+										<path fill-rule="evenodd" d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z" />
+										<circle cx="3.5" cy="5.5" r=".5" />
+										<circle cx="3.5" cy="8" r=".5" />
+										<circle cx="3.5" cy="10.5" r=".5" />
+									</svg>
+								</span>
+								<span class="nav-link-text">My Subscriptions</span>
+							</a>
+						</li>
+						<!-- Nav-NOTIFICATIONS-->
+						<li class="nav-item">
+							<a class="nav-link" href="notifications.html">
+								<span class="nav-icon app-utility-item app-notifications-dropdown">
+									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
+										<path fill-rule="evenodd" d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+									</svg>
+									<span class="icon-smallbadge" id="mynotificationscount-menu"></span>
+								</span>
+								<span class="nav-link-text">My Notifications</span>
+							</a>
+						</li>
+						<!-- Nav-RESIDENT-->
+						<li class="nav-item">
+
+							<a class="nav-link" href="resident.html">
+								<span class="nav-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+										<path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+									</svg>
+								</span>
+								<span class="nav-link-text">Resident Portal</span>
+							</a>
+						</li>
+						<!-- Nav-BUSINESS-->
+						<li class="nav-item">
+							<a class="nav-link active" href="business.html">
+								<span class="nav-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 16 16">
+										<path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5m1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0M1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5" />
+									</svg>
+								</span>
+								<span class="nav-link-text">Business Portal</span>
+							</a>
+						</li>
+						<!-- Nav-LINKED ACCOUNTS-->
+						<li class="nav-item">
+							<a class="nav-link" href="account.html#linkedaccounts">
+								<span class="nav-icon">
+									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+										<path fill-rule="evenodd" d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
+									</svg>
+								</span>
+								<span class="nav-link-text">Linked Accounts</span>
+							</a>
+						</li>
+						<!-- Nav-CONTACT US-->
+						<li class="nav-item">
+							<a class="nav-link" href="help.html">
+								<span class="nav-icon">
+									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<path fill-rule="evenodd" d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866.5h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 .866.5H11.5A1.5 1.5 0 0 0 13 12h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5" />
+									</svg>
+								</span>
+								<span class="nav-link-text">Help & Support</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+				<!-- Nav-BOTTOM SECTION-->
+				<div class="app-sidepanel-footer">
+					<nav class="app-nav app-nav-footer">
+						<ul class="app-menu footer-menu list-unstyled">
+							<li class="nav-item">
+
+								<a class="nav-link" href="https://www.newcastle-staffs.gov.uk">
+									<span class="nav-icon">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+											<path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+											<path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+										</svg>
+									</span>
+									<span class="nav-link-text">Council Website</span>
+								</a>
+							</li>
+							<li class="nav-item">
+
+								<a class="nav-link" href="account.html">
+									<span class="nav-icon">
+										<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+											<path fill-rule="evenodd" d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+											<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+										</svg>
+									</span>
+									<span class="nav-link-text">My Profile</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!--MAIN BODY-->
+	<div class="app-wrapper">
+		<div class="app-content pt-3 p-md-3 p-lg-4">
+			<div class="container-xl">
+				<!--Page Title-->
+				<div class="container">
+					<div class="row g-4 mb-1 ">
+						<div class="col-sm">
+							<h1 class="app-page-title">Business Portal</h1>
+						</div>
+						<div class="col-auto">
+							<a href="account.html#linkedaccounts"><button type="button" class="btn app-btn-primary">Link a Business Account</button></a>
+						</div>
+					</div>
+					<div class="row g-4 mb-3">
+						<div class="col-md-auto">
+							<p><strong>Select Account:</strong></p>
+						</div>
+						<div class="col">
+							<select class="form-select" aria-label="Select account" id="accountDropdown">
+								<option value="">Loading...</option>
+							</select>
+						</div>
+					</div>
+					<div id="pageContent">
+
+						<!--Summary widgets-->
+						<div class="row g-4 mb-4">
+							<!--Notifications-->
+							<div class="col col-6 col-lg-3">
+								<div class="card">
+									<a href="notifications.html">
+										<div class="card-header shadow-sm">
+											<strong>Notifications</strong>
+										</div>
+										<div class="card-body">
+											<div class="row">
+												<div class="col-auto">
+													<span class="nav-icon app-utility-item app-notifications-dropdown">
+														<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+															<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
+															<path fill-rule="evenodd" d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+														</svg>
+													</span>
+												</div>
+												<div class="col">
+													<span class="card-title widgettext" id="mynotificationscount-widget"></span>
+												</div>
+											</div>
+										</div>
+								</div></a>
+							</div>
+							<!--NNDR-->
+							<div class="col col-6 col-lg-3">
+								<div class="card"><a href="#nndr">
+										<div class="card-header shadow-sm">
+											<strong>Business Rates (NNDR)</strong>
+										</div>
+										<div class="card-body">
+											<div class="row">
+												<div class="col-auto">
+													<span class="nav-icon app-utility-item app-notifications-dropdown">
+														<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+															<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+															<path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
+														</svg>
+													</span>
+												</div>
+												<div class="col">
+													<span class="card-title widgettext" id="widget-tax-nextpayment"></span>
+												</div>
+											</div>
+										</div>
+								</div></a>
+							</div>
+							<!--Premises-->
+							<div class="col col-6 col-lg-3">
+								<div class="card">
+									<a href="#buspremises">
+										<div class="card-header shadow-sm">
+											<strong>Premises</strong>
+										</div>
+										<div class="card-body">
+											<div class="row">
+												<div class="col-auto">
+													<span class="nav-icon app-utility-item app-notifications-dropdown">
+														<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+															<path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
+															<path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z" />
+														</svg>
+													</span>
+												</div>
+												<div class="col">
+													<span class="card-title widgettext" id="widget-lease-nextpayment"></span>
+												</div>
+											</div>
+										</div>
+								</div></a>
+							</div>
+							<!--Subscription-->
+							<div class="col-6 col-lg-3">
+								<div class="card">
+									<a href="#subscriptions">
+										<div class="card-header shadow-sm">
+											<strong>Licences & Subscriptions</strong>
+										</div>
+										<div class="card-body">
+											<div class="row">
+												<div class="col-auto">
+													<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+														<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
+														<path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+													</svg>
+												</div>
+												<div class="col">
+													<span class="card-title widgettext" id="count-subscriptions"></span>
+												</div>
+											</div>
+										</div>
+								</div></a>
+							</div>
+
+						</div>
+
+						<!--Details section-->
+						<div class="row g-4 mb-4" id="subscriptions">
+							<div class="col-12 col-lg-12">
+								<div class="accordion">
+									<div class="accordion-item">
+										<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+
+											<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordian_subscriptions" aria-expanded="true" aria-controls="accordian_subscriptions">
+												<h4>Account Details</h4>
+											</button>
+										</h2>
+										<div id="accordian_subscriptions" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+											<div class="accordion-body">
+												<div class="row g-4 mb-4">
+													<!--Info section-->
+													<div class="col-12 col-lg-6">
+														<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+															<div class="app-card-header p-3 border-bottom-0">
+																<div class="row align-items-center gx-3">
+																	<div class="col-auto">
+																		<!--Icon-->
+																		<div class="app-icon-holder">
+																			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+																				<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+																				<path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+																			</svg>
+																		</div>
+																	</div>
+																	<!--Section title-->
+																	<div class="col-auto">
+																		<h4 class="app-card-title">Account Information</h4>
+																	</div>
+																</div>
+															</div>
+															<div class="app-card-body px-4">
+																<div class="intro"><strong>Address: </strong><span id="accountAddress"></span></div>
+															</div>
+														</div>
+													</div>
+													<!--Access to account section-->
+													<div class="col-12 col-lg-6">
+														<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+															<div class="app-card-header p-3 border-bottom-0">
+																<div class="row align-items-center gx-3">
+																	<div class="col-auto">
+																		<div class="app-icon-holder">
+																			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+																				<path fill-rule="evenodd" d="M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3" />
+																			</svg>
+																		</div>
+
+																	</div>
+																	<div class="col-auto">
+																		<h4 class="app-card-title">Access to this Account</h4>
+																	</div>
+																</div>
+															</div>
+															<div class="app-card-body px-4">
+																<p>The following persons have access to view and manage this account:</p>
+																<table class="table">
+																	<thead class="thead-light">
+																		<tr>
+																			<th scope="col">Name</th>
+																			<th scope="col">Email</th>
+																			<td scope="col"></td>
+																		</tr>
+																	</thead>
+																	<tbody id="accessTableBody"></tbody>
+																</table>
+
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!--Business Account section-->
+							<div class="row g-4 mb-4">
+								<div class="col-12 col-lg-12">
+									<div class="accordion" id="nndr">
+										<div class="accordion-item">
+											<h2 class="accordion-header" id="accordian-nndraccount">
+
+												<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#business_nndr" aria-expanded="true" aria-controls="business_nndr">
+													<h4>Business Rates (NNDR)</h4>
+												</button>
+											</h2>
+											<div id="business_nndr" class="accordion-collapse collapse show" aria-labelledby="accordian-nndraccount">
+												<div class="accordion-body">
+													<!--Alert-->
+													<div class="alert alert-danger pt-3" role="alert" id="tax-alert-noaccount">No NNDR information is available. Please contact us.</div>
+
+													<!--NNDR info-->
+													<div id="tax-account-info">
+														<div class="row justify-content-end d-sm-flex ">
+															<div class="col-auto">
+																<p class="pt-2"><strong>Select Year:</strong></p>
+															</div>
+															<div class="col-auto mb-4 justify-content-end d-sm-flex ">
+																<select class="form-select" aria-label="Select year" id="yearDropdown">
+																</select>
+															</div>
+														</div>
+														<div class="row g-4 mb-4">
+															<div class="col-12 col-lg-6">
+																<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+																	<div class="app-card-header p-3 border-bottom-0">
+																		<div class="row align-items-center gx-3">
+																			<div class="col-auto">
+																				<!--Icon-->
+																				<div class="app-icon-holder">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wallet2" viewBox="0 0 16 16">
+																						<path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z" />
+																					</svg>
+																				</div>
+																			</div>
+																			<!--Section title-->
+																			<div class="col-auto">
+																				<h4 class="app-card-title">Account Summary</h4>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="app-card-body px-4">
+																		<div class="intro"><strong>Account Number: </strong><span id="accountNumber"></span></div>
+																		<div class="intro"><strong>Address: </strong><span id="accountAddress"></span></div>
+																	</div>
+																	<div class="app-card-footer p-4 mt-auto">
+																		<a class="btn app-btn-primary" href="#">View your bill</a>
+																		<a class="btn app-btn-secondary" href="#">Update your Account</a>
+																	</div>
+																</div>
+															</div>
+															<!--Discounts section-->
+															<div class="col-12 col-lg-6">
+																<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+																	<div class="app-card-header p-3 border-bottom-0">
+																		<div class="row align-items-center gx-3">
+																			<div class="col-auto">
+																				<div class="app-icon-holder">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+																						<path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1M3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+																					</svg>
+																				</div>
+
+																			</div>
+																			<div class="col-auto">
+																				<h4 class="app-card-title">Discounts/Exemptions</h4>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="app-card-body px-4">
+																		<p>The following discounts/exemptions are active on this account:</p>
+																		<table class="table">
+																			<thead class="thead-light">
+																				<tr>
+																					<th scope="col">Discount/Exemption</th>
+																					<th scope="col">Start Date</th>
+																					<th scope="col">End Date</th>
+																				</tr>
+																			</thead>
+																			<tbody id="discountsTableBody"></tbody>
+																		</table>
+
+																	</div>
+																	<div class="app-card-footer p-4 mt-auto">
+																		<p class="font-italic">If a discount or exemption is no longer applicable, you are required to notify us immediately.</p>
+																		<a class="btn app-btn-secondary" href="#">Notify us of a Change</a>
+																		<a class="btn app-btn-primary" href="#">Apply for a Discount</a>
+																	</div>
+																</div>
+															</div>
+
+															<!--Payments section-->
+															<div class="col-12 col-lg-6">
+																<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+																	<div class="app-card-header p-3 border-bottom-0">
+																		<div class="row align-items-center gx-3">
+																			<div class="col-auto">
+																				<div class="app-icon-holder">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card" viewBox="0 0 16 16">
+																						<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+																						<path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
+																					</svg>
+																				</div>
+
+																			</div>
+																			<div class="col-auto">
+																				<h4 class="app-card-title">Payments</h4>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="app-card-body px-4">
+																		<div class="intro"><strong>Next Payment due: </strong> £<span id="nextPayAmount"></span> - <span id="nextPayDate"></span>.</div>
+																		<div class="intro"><strong>Payment Method:</strong> <span id="paymentMethod"></span></div>
+																		<div class="intro"><strong>Payment Frequency:</strong> <span id="instalmentsDue"></span> for <span id="paymentFrequency"></span></div>
+																		<br>
+																		<div class="app-card accordion mb-2" id="accordionPanelsStayOpenExample">
+																			<div class="accordion-item">
+																				<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+																					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#counciltax_installments" aria-expanded="true" aria-controls="counciltax_installments">
+																						<h6>Remaining Installments</h6>
+																					</button>
+																				</h2>
+
+																				<div id="counciltax_installments" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+																					<div class="accordion-body">
+																						<div class="table-responsive app-card app-card-orders-table">
+																							<table class="table">
+																								<thead class="thead-light">
+																									<tr>
+																										<th scope="col">Due Date</th>
+																										<th scope="col">Amount</th>
+																									</tr>
+																								</thead>
+																								<tbody id="instalmentsTableBody"></tbody>
+																							</table>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="app-card accordion" id="accordionPanelsStayOpenExample">
+																			<div class="accordion-item">
+																				<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+																					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tax_payments" aria-expanded="true" aria-controls="tax_payments">
+																						<h6>Payments Made</h6>
+																					</button>
+																				</h2>
+
+																				<div id="tax_payments" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+																					<div class="accordion-body">
+																						<div class="table-responsive app-card app-card-orders-table">
+																							<table class="table">
+																								<thead class="thead-light">
+																									<tr>
+																										<th scope="col">Due Date</th>
+																										<th scope="col">Amount</th>
+																										<th scope="col">Paid By</th>
+																									</tr>
+																								</thead>
+																								<tbody id="paymentsTableBody"></tbody>
+																							</table>
+																						</div>
+																					</div>
+
+																				</div>
+
+																			</div>
+
+																		</div>
+
+
+																	</div>
+																	<div class="app-card-footer p-4 mt-auto">
+																		<a class="btn app-btn-secondary" href="#">Make a Payment</a>
+																		<a class="btn app-btn-primary" href="#">Setup Direct Debit</a>
+																	</div>
+																</div>
+															</div>
+
+
+
+															<div class="col-12 col-lg-6">
+																<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+																	<div class="app-card-header p-3 border-bottom-0">
+																		<div class="row align-items-center gx-3">
+																			<div class="col-auto">
+																				<div class="app-icon-holder">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+																						<path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1M3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+																					</svg>
+																				</div>
+
+																			</div>
+																			<div class="col-auto">
+																				<h4 class="app-card-title">Help & Support</h4>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="app-card-body px-4">
+																		<p>Need to make a change to your account? Here are some of our most used forms.</p>
+																		<ul>
+																			<li><strong>Edit your account information</strong></li>
+																			<li><strong>Get help with your payments</strong></li>
+																			<li><strong>Apply for a Discount/Exemption</strong></li>
+																			<li><strong>Tell us you're moving house</strong></li>
+																		</ul>
+																	</div>
+																	<div class="app-card-footer p-4 mt-auto">
+																		<p class="font-italic">By law, you must notify us of any account changes within 21 days, or you may be issued a £70 penalty.</p>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<!--Subscriptions section-->
+							<div class="row g-4 mb-4" id="subscriptions">
+								<div class="col-12 col-lg-12">
+									<div class="accordion">
+										<div class="accordion-item">
+											<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+
+												<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordian_subscriptions" aria-expanded="true" aria-controls="accordian_subscriptions">
+													<h4>Licences & Subscriptions</h4>
+												</button>
+											</h2>
+											<div id="accordian_subscriptions" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+												<div class="accordion-body">
+													<div class="row g-3 mb-4 justify-content-end d-sm-flex">
+													</div>
+													<div class="tab-content" id="orders-table-tab-content">
+														<div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+															<div class="app-card app-card-orders-table shadow-sm mb-2">
+																<div class="app-card-body">
+																	<div class="table-responsive">
+																		<table class="table app-table-hover mb-0 text-left" id="table-mysubs">
+																			<thead>
+																				<tr>
+																					<th class="cell">Ref #</th>
+																					<th class="cell">Category</th>
+																					<th class="cell">Subscription</th>
+																					<th class="cell">Status</th>
+																					<th class="cell">Expiry</th>
+																					<th class="cell text-center">Auto Renewal?</th>
+																					<td class="cell"></td>
+																				</tr>
+																			</thead>
+																			<tbody>
+																			</tbody>
+																		</table>
+																	</div>
+
+																</div>
+															</div>
+															<div class="app-card-footer mt-auto justify-content-end d-sm-flex">
+																<a class="action-link" href="subscriptions.html">View all subscriptions <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right ms-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+																		<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+																	</svg></a>
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<!--My Requests section-->
+							<div class="row g-4 mb-4">
+								<div class="col-12 col-lg-12">
+									<div class="app-card accordion" id="requests">
+										<div class="accordion-item">
+											<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+												<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#resident_section_requests" aria-expanded="true" aria-controls="resident_section_requests">
+													<h4>Service Requests</h4>
+												</button>
+											</h2>
+
+											<div id="resident_section_requests" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+												<div class="accordion-body">
+													<div class="table-responsive app-card app-card-orders-table shadow-sm mb-2">
+														<table class="table app-table-hover mb-0 text-left" id="table-myservicerequests">
+															<thead>
+																<tr>
+																	<th class="cell">Request #</th>
+																	<th class="cell">Subject</th>
+																	<th class="cell">Category</th>
+																	<th class="cell">Status</th>
+																	<td class="cell"></td>
+																</tr>
+															</thead>
+															<tbody>
+															</tbody>
+														</table>
+
+													</div>
+													<div class="app-card-footer mt-auto justify-content-end d-sm-flex">
+														<a class="action-link" href="servicerequest.html">View all requests <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right ms-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+																<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+															</svg></a>
+													</div>
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+							</div>
+
+							<!--Premises section-->
+							<div class="row g-4 mb-4">
+								<div class="col-12 col-lg-12">
+									<div class="accordion" id="buspremises">
+										<div class="accordion-item">
+											<h2 class="accordion-header" id="accordian-businesspremises">
+
+												<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#business_premises" aria-expanded="true" aria-controls="business_premises">
+													<h4>Premises</h4>
+												</button>
+											</h2>
+											<div id="business_premises" class="accordion-collapse collapse show" aria-labelledby="accordian-nndraccount">
+												<div class="accordion-body">
+													<!--Alert-->
+													<div class="alert alert-danger pt-3" role="alert" id="premises-alert-noleases">No leases are linked to this account. If this is incorrect, please contact us.</div>
+													<!--premises info-->
+													<div id="premises-lease-info">
+														<div class="row justify-content-end d-sm-flex ">
+															<div class="col-auto">
+																<p class="pt-2"><strong>Select Year:</strong></p>
+															</div>
+															<div class="col-auto mb-4 justify-content-end d-sm-flex ">
+																<select class="form-select" aria-label="Select year" id="leaseyearsDropdown">
+																	<option>Loading...</option>
+																</select>
+															</div>
+														</div>
+														<div class="row g-4 mb-4">
+															<div class="col-12 col-lg-6">
+																<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+																	<div class="app-card-header p-3 border-bottom-0">
+																		<div class="row align-items-center gx-3">
+																			<div class="col-auto">
+																				<div class="app-icon-holder">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
+																						<path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z" />
+																						<path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z" />
+																					</svg>
+																				</div>
+
+																			</div>
+																			<div class="col-auto">
+																				<h4 class="app-card-title">Lease</h4>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="app-card-body px-4">
+																		<div><strong>Reference #:</strong> <span id="lease-ref"></span></div>
+																		<div><strong>Type:</strong> <span id="lease-type"></div>
+																		<div><strong>Expiry:</strong> <span id="lease-expiry"></div>
+																	</div>
+																	<div class="app-card-footer p-4 mt-auto">
+																		<a class="btn app-btn-primary" href="#">View Documents</a>
+																	</div>
+																</div>
+															</div>
+															<!--Payments section-->
+															<div class="col-12 col-lg-6">
+																<div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm">
+																	<div class="app-card-header p-3 border-bottom-0">
+																		<div class="row align-items-center gx-3">
+																			<div class="col-auto">
+																				<div class="app-icon-holder">
+																					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card" viewBox="0 0 16 16">
+																						<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z" />
+																						<path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
+																					</svg>
+																				</div>
+
+																			</div>
+																			<div class="col-auto">
+																				<h4 class="app-card-title">Payments</h4>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="app-card-body px-4">
+																		<div class="intro"><strong>Annual Charge: </strong> £<span id="lease-annualcharge"></span></div>
+																		<div class="intro"><strong>Payments to date:</strong> £<span id="lease-paidtodate"></div>
+																		<div class="intro"><strong>Remaining Balance:</strong> £<span id="lease-remainingbalance"></div>
+																		<br>
+																		<div class="intro"><strong>Payment Method:</strong> <span id="lease-paymentmethod"></div>
+																		<div class="intro"><strong>Payment Frequency:</strong> <span id="lease-paymentfrequency"></div>
+																		<br>
+																		<div class="app-card accordion" id="accordionPanelsStayOpenExample">
+																			<div class="accordion-item">
+																				<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+																					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#lease_installments" aria-expanded="true" aria-controls="lease_installments">
+																						<h6>Remaining Installments</h6>
+																					</button>
+																				</h2>
+
+																				<div id="lease_installments" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+																					<div class="accordion-body">
+																						<div class="table-responsive app-card app-card-orders-table">
+																							<table class="table" id="lease-instalments-table">
+																								<thead class="thead-light">
+																									<tr>
+																										<th scope="col">Due Date</th>
+																										<th scope="col">Amount</th>
+																									</tr>
+																								</thead>
+																								<tbody id="lease-instalments-tbody"></tbody>
+																							</table>
+
+																						</div>
+
+																					</div>
+
+																				</div>
+
+																			</div>
+
+																		</div>
+
+
+																	</div>
+																	<div class="app-card-footer p-4 mt-auto">
+																		<a class="btn app-btn-secondary" href="#">Make a Payment</a>
+																		<a class="btn app-btn-primary" href="#">Setup Direct Debit</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Javascript -->
+						<script src="assets/plugins/popper.min.js"></script>
+						<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+						<!-- Page Specific JS -->
+						<script src="assets/js/app.js"></script>
+
+						<!-- jQuery -->
+						<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+						<!-- Load data -->
+						<script type="module">
+							import {
+								getData,
+								formatDate,
+								getCustomerFields,
+								updateNotifications,
+								renderModalNotifications,
+								populateAccountsDropdown,
+								togglePageContent,
+								handleAccountChange,
+								updateTaxUI,
+								showNextLeasePayment,
+								getLeaseInfoForYear
+							} from './assets/scripts/functions.js';
+
+							(async () => {
+								const data = await getData();
+								if (!data) return;
+
+								//get customer info
+								const customer = data.customer[0];
+								// Define mapping: element IDs → customer field paths
+								const fieldMap = {
+									'customerfirstname-profile': 'firstname',
+								};
+								getCustomerFields(customer, fieldMap);
+
+								// get notifications
+								updateNotifications(data);
+								renderModalNotifications(data);
+
+								// Populate dropdown (Residential or Business)
+								const dropdown = populateAccountsDropdown(data, "Business");
+
+								// Get selected business ID from the dropdown
+								const selectedId = dropdown.value;
+
+								// Toggle page content visibility
+								togglePageContent('accountDropdown', 'pageContent');
+
+								//loading spinner
+								const spinner = document.getElementById('loading-spinner');
+
+								// Handle account change
+								if (dropdown) {
+									dropdown.addEventListener('change', () => {
+
+										const selectedId = dropdown.value;
+										console.log('Selected ID:', selectedId);
+
+										if (!selectedId) {
+											return;
+										}
+
+										document.getElementById('pageContent').classList.add('show');
+										handleAccountChange(data, selectedId, 'pageContent');
+
+										//Lease - next payment
+										showNextLeasePayment(data, selectedId, 'widget-lease-nextpayment');
+
+
+
+									});
+
+									// Auto-trigger if only one account is available
+									if (dropdown.value) {
+										const selectedId = dropdown.value;
+										handleAccountChange(data, dropdown.value, 'pageContent');
+										document.getElementById('pageContent').classList.add('show');
+
+										//Lease - next payment
+										showNextLeasePayment(data, selectedId, 'widget-lease-nextpayment');
+
+
+									}
+								}
+							})();
+						</script>
+
+
+</body>
+
+</html>
