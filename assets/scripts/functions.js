@@ -345,7 +345,7 @@ export function renderServiceRequestsTable(data, selectedId) {
                         <td>${req.subject}</td>
                         <td>${req.category}</td>
                         <td>${req.status}</td>
-                        <td><a href="service/request.html">View</a></td>
+                        <td><a href="service/request.html?id=${req.id}">View</a></td>
                     </tr>
                 `);
             });
@@ -843,7 +843,7 @@ export function showServiceRequests(
                     <td class="cell"><span class="truncate">${req.subject}</span></td>
                     <td class="cell">${req.category}</td>
                     <td class="cell">${req.status}</td>
-                    <td class="cell"><a href="servicerequest.html">View</a></td>
+                    <td class="cell"><a href="/service/request.html?id=${req.id}">View</a></td>
                 </tr>
             `;
             tbody.insertAdjacentHTML('beforeend', row);
