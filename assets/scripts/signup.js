@@ -6,16 +6,16 @@ export function initSignupForm(formSelector, progressSelector) {
   const progressBar = document.querySelector(progressSelector);
   let currentStep = 0;
 
-  
-// Reset form on page load
-form.reset();
 
-// Also clear any validation states
-const allFields = form.querySelectorAll('input, select, textarea');
-allFields.forEach(field => {
-  field.classList.remove('is-invalid');
-  field.setCustomValidity('');
-});
+  // Reset form on page load
+  form.reset();
+
+  // Also clear any validation states
+  const allFields = form.querySelectorAll('input, select, textarea');
+  allFields.forEach(field => {
+    field.classList.remove('is-invalid');
+    field.setCustomValidity('');
+  });
 
 
   // Account dropdown & groups
@@ -61,19 +61,27 @@ allFields.forEach(field => {
     field.setCustomValidity('');
 
     // Council Tax group
+
+    const ctAccountPattern = /^3\d{7}$/;
     if (id === 'ctAccountNumber' && field.required) {
-      if (!patterns.councilTaxAccount.test(value)) {
-        field.setCustomValidity('Account number must be 8–10 digits.');
+      if (!ctAccountPattern.test(value)) {
+        field.setCustomValidity('Account number must be exactly 8 digits and start with 3 (e.g., 31234567).');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
     if (id === 'ctPostcode' && field.required) {
       if (!patterns.ukPostcode.test(value)) {
         field.setCustomValidity('Enter a valid UK postcode.');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
     if (id === 'ctaccountname' && field.required) {
       if (value.length < 2) {
         field.setCustomValidity('Name on the bill must be at least 2 characters.');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
 
@@ -81,16 +89,22 @@ allFields.forEach(field => {
     if (id === 'brAccountNumber' && field.required) {
       if (!patterns.businessRatesAccount.test(value)) {
         field.setCustomValidity('Account number must be 6–12 letters/digits (hyphen allowed).');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
     if (id === 'brPostcode' && field.required) {
       if (!patterns.ukPostcode.test(value)) {
         field.setCustomValidity('Enter a valid UK postcode.');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
     if (id === 'braccountname' && field.required) {
       if (value.length < 2) {
         field.setCustomValidity('Business name must be at least 2 characters.');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
 
@@ -98,13 +112,17 @@ allFields.forEach(field => {
     if ((id === 'firstName' || id === 'lastName') && field.required) {
       if (value.length < 2) {
         field.setCustomValidity('Must be at least 2 characters.');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
 
     // Mobile 
     if (id === 'mobilenumber' && field.required) {
-      if (!/^\+?\d{5,13}$/.test(value) || value.length < 13 ) {
+      if (!/^\+?\d{5,13}$/.test(value) || value.length < 13) {
         field.setCustomValidity('Enter 5–13 digits; optional leading +.');
+      } else {
+        field.setCustomValidity(''); // clear previous validation message when valid
       }
     }
   }
@@ -214,25 +232,25 @@ allFields.forEach(field => {
       }
     }
   });
-  
-// Handle final form submission
-form.addEventListener('submit', (e) => {
-  e.preventDefault(); // Prevent default submission
 
-  if (isStepValid()) {
-    // Get the email address from the form
-    const emailField = form.querySelector('#email');
-    const email = emailField ? emailField.value.trim() : '';
+  // Handle final form submission
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevent default submission
 
-    // Store email in sessionStorage
-    if (email) {
-      sessionStorage.setItem('signupEmail', email);
+    if (isStepValid()) {
+      // Get the email address from the form
+      const emailField = form.querySelector('#email');
+      const email = emailField ? emailField.value.trim() : '';
+
+      // Store email in sessionStorage
+      if (email) {
+        sessionStorage.setItem('signupEmail', email);
+      }
+
+      // Redirect to confirmation page
+      window.location.href = '/register/confirm.html';
     }
-
-    // Redirect to confirmation page
-    window.location.href = '/register/confirm.html';
-  }
-});
+  });
 
 
   // Init

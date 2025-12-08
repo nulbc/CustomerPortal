@@ -345,7 +345,7 @@ export function renderServiceRequestsTable(data, selectedId) {
                         <td>${req.subject}</td>
                         <td>${req.category}</td>
                         <td>${req.status}</td>
-                        <td><a href="service/request.html"View</a></td>
+                        <td><a href="service/request.html">View</a></td>
                     </tr>
                 `);
             });
