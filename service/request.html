@@ -27,6 +27,7 @@
 			<div class="container-fluid py-2">
 				<div class="app-header-content">
 					<div class="row justify-content-between align-items-center">
+						<!--Menu toggler-->
 						<div class="col-auto">
 							<a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none whiteicon" href="#">
 								<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img">
@@ -34,119 +35,60 @@
 									<path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>
 								</svg>
 							</a>
-						</div><!--//col-->
+						</div>
+						<!--Logo-->
 						<div class="col">
-							<a href="/index.html"><img class="nulbclogo me-2" src="/assets/images/nulbc.png" alt="logo"><span class="logo-text"></span></a>
+							<a href="index.html"><img class="nulbclogo me-2" src="/assets/images/nulbc.png" alt="logo"><span class="logo-text"></span></a>
 
-						</div><!--//app-branding-->
+						</div>
 
 
+						<!--Notifications/Profile icons-->
 						<div class="app-utilities col-auto">
+							<!--Notifications-->
 							<div class="app-utility-item app-notifications-dropdown dropdown">
 								<a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Notifications">
-
 									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon whiteicon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 										<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
 										<path fill-rule="evenodd" d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
 									</svg>
-									<span class="icon-badge">3</span>
-								</a><!--//dropdown-toggle-->
-
+									<span class="icon-badge" id="mynotificationscount-header"></span>
+								</a>
 								<div class="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
 									<div class="dropdown-menu-header p-3">
 										<h5 class="dropdown-menu-title mb-0">Notifications</h5>
-									</div><!--//dropdown-menu-title-->
+									</div>
 									<div class="dropdown-menu-content">
-										<div class="item p-3">
-											<div class="row gx-2 justify-content-between align-items-center">
-
-												<div class="col-auto">
-													<div class="app-icon-holder">
-														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-square" viewBox="0 0 16 16">
-															<path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
-															<path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
-														</svg>
-													</div>
-												</div><!--//col-->
-												<div class="col">
-													<div class="info">
-														<div class="desc">We are unable to collect your Garden Waste bin today. Please leave the bin out and we will collect within 2 working days. </div>
-														<div class="meta"> 2 hrs ago</div>
-													</div>
-												</div><!--//col-->
-											</div><!--//row-->
-											<a class="link-mask" href="/notifications.html"></a>
-										</div><!--//item-->
-										<div class="item p-3">
-											<div class="row gx-2 justify-content-between align-items-center">
-												<div class="col-auto">
-													<div class="app-icon-holder">
-														<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-receipt" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-															<path fill-rule="evenodd" d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z" />
-															<path fill-rule="evenodd" d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z" />
-														</svg>
-													</div>
-												</div><!--//col-->
-												<div class="col">
-													<div class="info">
-														<div class="desc">Your Council Tax bill for 2026/27 is now available.</div>
-														<div class="meta"> 1 day ago</div>
-													</div>
-												</div><!--//col-->
-											</div><!--//row-->
-											<a class="link-mask" href="/notifications.html"></a>
-										</div><!--//item-->
-										<div class="item p-3">
-											<div class="row gx-2 justify-content-between align-items-center">
-												<div class="col-auto">
-													<div class="app-icon-holder icon-holder-mono">
-														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
-															<path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z" />
-															<path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1" />
-														</svg>
-													</div>
-												</div><!--//col-->
-												<div class="col">
-													<div class="info">
-														<div class="desc">Your Garden Waste subscription ends 31/12/2025. Renew now for next years collection.</div>
-														<div class="meta"> 3 days ago</div>
-													</div>
-												</div><!--//col-->
-											</div><!--//row-->
-											<a class="link-mask" href="/notifications.html"></a>
-										</div><!--//item-->
-
-									</div><!--//dropdown-menu-content-->
-
+										<div id="notificationModal"></div>
+									</div>
 									<div class="dropdown-menu-footer p-2 text-center">
-										<a href="/notifications.html">View all</a>
+										<a href="notifications.html">View all</a>
 									</div>
 
-								</div><!--//dropdown-menu-->
-							</div><!--//app-utility-item-->
-
+								</div>
+							</div>
+							<!--Profile icon-->
 							<div class="app-utility-item app-user-dropdown dropdown">
 								<a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle icon whiteicon" viewBox="0 0 16 16">
 										<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
 										<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
 									</svg></a>
-
 								<ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
-									<li><a class="dropdown-item"><strong>Welcome back, Christopher!</strong></a></li>
-									<li><a class="dropdown-item" href="/account.html">My Profile</a></li>
-									<li><a class="dropdown-item" href="/notifications.html">My Notifications</a></li>
+									<li><a class="dropdown-item"><strong>Welcome back, <span id="customerfirstname-profile"></span>!</strong></a></li>
+									<li><a class="dropdown-item" href="account.html">My Profile</a></li>
+									<li><a class="dropdown-item" href="notifications.html">My Notifications</a></li>
 									<li>
 										<hr class="dropdown-divider">
 									</li>
-									<li><a class="dropdown-item" href="/login.html">Log Out</a></li>
+									<li><a class="dropdown-item" href="login.html">Log Out</a></li>
 								</ul>
-							</div><!--//app-user-dropdown-->
-						</div><!--//app-utilities-->
-					</div><!--//row-->
-				</div><!--//app-header-content-->
-			</div><!--//container-fluid-->
-		</div><!--//app-header-inner-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div id="app-sidepanel" class="app-sidepanel">
 			<div id="sidepanel-drop" class="sidepanel-drop"></div>
 			<div class="sidepanel-inner d-flex flex-column">
@@ -154,25 +96,25 @@
 				<div class="app-branding">
 					<span class="logo-text"></span></a>
 
-				</div><!--//app-branding-->
-
+				</div>
+				<!--Navigation menu-->
 				<nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
 					<ul class="app-menu list-unstyled accordion" id="menu-accordion">
+						<!-- Nav-HOME-->
 						<li class="nav-item">
-
-							<a class="nav-link" href="/index.html">
+							<a class="nav-link" href="index.html">
 								<span class="nav-icon">
 									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-columns-gap" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 										<path fill-rule="evenodd" d="M6 1H1v3h5V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12h-5v3h5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8H1v7h5V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6h-5v7h5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z" />
 									</svg>
 								</span>
 								<span class="nav-link-text">Home</span>
-							</a><!--//nav-link-->
+							</a>
 						</li>
-						<!--//nav-item-->
+						<!-- Nav-SERVICEREQUEST-->
 						<li class="nav-item">
 
-							<a class="nav-link active" href="/servicerequest.html">
+							<a class="nav-link active" href="servicerequest.html">
 								<span class="nav-icon">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ol" viewBox="0 0 16 16">
 										<path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5" />
@@ -180,11 +122,11 @@
 									</svg>
 								</span>
 								<span class="nav-link-text">My Service Requests</span>
-							</a><!--//nav-link-->
-						</li><!--//nav-item-->
+							</a>
+						</li>
+						<!-- Nav-SUBSCRIPTIONS-->
 						<li class="nav-item">
-
-							<a class="nav-link" href="/subscriptions.html">
+							<a class="nav-link" href="subscriptions.html">
 								<span class="nav-icon">
 									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 										<path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
@@ -195,22 +137,22 @@
 									</svg>
 								</span>
 								<span class="nav-link-text">My Subscriptions</span>
-							</a><!--//nav-link-->
-						</li><!--//nav-item-->
-						<!--//nav-item-->
+							</a>
+						</li>
+						<!-- Nav-NOTIFICATIONS-->
 						<li class="nav-item">
-
-							<a class="nav-link" href="/notifications.html">
+							<a class="nav-link" href="notifications.html">
 								<span class="nav-icon app-utility-item app-notifications-dropdown">
 									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 										<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
 										<path fill-rule="evenodd" d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
 									</svg>
-									<span class="icon-smallbadge">3</span>
+									<span class="icon-smallbadge" id="mynotificationscount-menu"></span>
 								</span>
 								<span class="nav-link-text">My Notifications</span>
-							</a><!--//nav-link-->
-						</li><!--//nav-item-->
+							</a>
+						</li>
+						<!-- Nav-RESIDENT-->
 						<li class="nav-item">
 
 							<a class="nav-link" href="resident.html">
@@ -220,24 +162,22 @@
 									</svg>
 								</span>
 								<span class="nav-link-text">Resident Portal</span>
-							</a><!--//nav-link-->
-						</li><!--//nav-item-->
+							</a>
+						</li>
+						<!-- Nav-BUSINESS-->
 						<li class="nav-item">
-
-							<a class="nav-link" href="/business.html">
+							<a class="nav-link" href="business.html">
 								<span class="nav-icon">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 16 16">
 										<path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5m1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0M1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5" />
 									</svg>
 								</span>
 								<span class="nav-link-text">Business Portal</span>
-							</a><!--//nav-link-->
-						</li><!--//nav-item-->
-
-
+							</a>
+						</li>
+						<!-- Nav-LINKED ACCOUNTS-->
 						<li class="nav-item">
-
-							<a class="nav-link" href="/docs.html">
+							<a class="nav-link" href="docs.html">
 								<span class="nav-icon">
 									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 										<path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
@@ -245,23 +185,22 @@
 									</svg>
 								</span>
 								<span class="nav-link-text">Linked Accounts</span>
-							</a><!--//nav-link-->
-						</li><!--//nav-item-->
-
+							</a>
+						</li>
+						<!-- Nav-CONTACT US-->
 						<li class="nav-item">
-
-							<a class="nav-link" href="/help.html">
+							<a class="nav-link" href="help.html">
 								<span class="nav-icon">
 									<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 										<path fill-rule="evenodd" d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866.5h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 .866.5H11.5A1.5 1.5 0 0 0 13 12h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5" />
-
 									</svg>
 								</span>
-								<span class="nav-link-text">Contact Us</span>
-							</a><!--//nav-link-->
-						</li><!--//nav-item-->
-					</ul><!--//app-menu-->
-				</nav><!--//app-nav-->
+								<span class="nav-link-text">Help & Support</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+				<!-- Nav-BOTTOM SECTION-->
 				<div class="app-sidepanel-footer">
 					<nav class="app-nav app-nav-footer">
 						<ul class="app-menu footer-menu list-unstyled">
@@ -275,11 +214,11 @@
 										</svg>
 									</span>
 									<span class="nav-link-text">Council Website</span>
-								</a><!--//nav-link-->
-							</li><!--//nav-item-->
+								</a>
+							</li>
 							<li class="nav-item">
 
-								<a class="nav-link" href="/account.html">
+								<a class="nav-link" href="account.html">
 									<span class="nav-icon">
 										<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 											<path fill-rule="evenodd" d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -287,16 +226,14 @@
 										</svg>
 									</span>
 									<span class="nav-link-text">My Profile</span>
-								</a><!--//nav-link-->
-							</li><!--//nav-item-->
-
-						</ul><!--//footer-menu-->
+								</a>
+							</li>
+						</ul>
 					</nav>
-				</div><!--//app-sidepanel-footer-->
-
-			</div><!--//sidepanel-inner-->
-		</div><!--//app-sidepanel-->
-	</header><!--//app-header-->
+				</div>
+			</div>
+		</div>
+	</header>
 
 	<div class="app-wrapper">
 
@@ -405,7 +342,6 @@
 					<div class="col-xxl-8">
 						<div class="row">
 							<div class="col-xl-6 col-xxl-12">
-								<!--Activitys-->
 								<div class="card mb-4">
 									<div class="card-header"><strong>Activity</strong></div>
 									<div class="card-body">
@@ -441,7 +377,7 @@
 											</li>
 										</ul>
 										</section>
-										<!-- Section: Timeline -->
+
 
 									</div>
 								</div>
@@ -450,14 +386,9 @@
 
 					</div>
 
-					<footer class="app-footer">
-						<div class="container text-center py-3">
-							<small class="copyright">&copy; 2025 - Newcastle-under-Lyme Borough Council</small>
+	
 
-						</div>
-					</footer><!--//app-footer-->
-
-				</div><!--//app-wrapper-->
+				</div>
 
 
 				<!-- Javascript -->
@@ -467,6 +398,39 @@
 
 				<!-- Page Specific JS -->
 				<script src="/assets/js/app.js"></script>
+
+				<!-- jQuery -->
+			<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+			<!-- Load data -->
+			<script type="module">
+				import {
+					getData,
+					formatDate,
+					getCustomerFields,
+					updateNotifications,
+					renderModalNotifications,
+					showServiceRequests
+				} from '/assets/scripts/functions.js';
+
+				(async () => {
+					const data = await getData();
+					if (!data) return;
+
+					//get customer info
+					const customer = data.customer[0];
+					// Define mapping: element IDs → customer field paths
+					const fieldMap = {
+						'customerfirstname-profile': 'firstname',
+					};
+					getCustomerFields(customer, fieldMap);
+
+					// get notifications
+					updateNotifications(data);
+					renderModalNotifications(data);
+
+					}) ();
+			</script>
 
 </body>
 
