@@ -2004,6 +2004,18 @@ export async function renderMyDocuments({
   }
 }
 
+/**
+ * Display MyDocuments banner
+ */
+export function getMyDocCount(data) {
+    try {
+        const unreadDocs = data.mydocuments.filter(docs => docs.isRead !== "Y");
+        const countDocs = unreadDocs.length;
+        setTextIfExists('mydocumentscount-menu', countDocs);
+    } catch (error) {
+        console.error('getMyDocCount error:', error.message);
+    }
+}
 
 
 
