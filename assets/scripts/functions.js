@@ -1465,6 +1465,17 @@ export function getLeaseInfoForYear(
 
 /* Render MyDocuments */
 
+/* functions.js (ES Module)
+ * Documents UI with integrated account name join:
+ *  - Joins accounts by (mydocuments.accountid) === (accounts.id) and displays accounts.name
+ *  - Filter dropdown (default = "All documents"; robust against blank)
+ *  - Pagination (10/page)
+ *  - Sort by UploadDate (newest first)
+ *  - "NEW" badge (UploadDate within last 3 months)
+ *  - View (Base64 -> iframe in Bootstrap modal; programmatic only, no data-bs-toggle)
+ *  - Download (Base64 -> PDF)
+ */
+
 const ALL_VALUE = '__all__';
 
 /* ---------- Date helpers ---------- */
@@ -1484,7 +1495,6 @@ function parseUploadDate(dateStr) {
   const fallback = new Date(s);
   return isNaN(fallback.getTime()) ? null : fallback;
 }
-
 function addMonths(date, months) {
   const d = new Date(date.getTime());
   const targetMonth = d.getMonth() + months;
@@ -1493,7 +1503,6 @@ function addMonths(date, months) {
   if (d.getDate() > lastOfTarget.getDate()) d.setDate(lastOfTarget.getDate());
   return d;
 }
-
 function isDocumentNew(uploadDateStr) {
   const uploadDate = parseUploadDate(uploadDateStr);
   if (!uploadDate) return false;
@@ -1513,13 +1522,11 @@ function base64ToBlob(base64, mimeType = 'application/pdf') {
   const byteArray = new Uint8Array(byteNumbers);
   return new Blob([byteArray], { type: mimeType });
 }
-
 function htmlToElement(html) {
   const template = document.createElement('template');
   template.innerHTML = html.trim();
   return template.content.firstElementChild;
 }
-
 function toSafeFilename(name, ext = '.pdf') {
   const base = (name || 'document')
     .replace(/[\\/:*?"<>|]+/g, '')
@@ -1529,13 +1536,84 @@ function toSafeFilename(name, ext = '.pdf') {
   return base.toLowerCase().endsWith(ext) ? base : base + ext;
 }
 
-/* ---------- Row builder ---------- */
+/* ---------- Modal helpers (single open path + size enforcement) ---------- */
+function ensureModalSize(modalEl) {
+  const dlg = modalEl.querySelector('.modal-dialog');
+  if (!dlg) return;
+  dlg.classList.remove('modal-sm');
+  dlg.classList.add('modal-xl', 'modal-fullscreen-sm-down');
+
+  // Guard against tiny width if some CSS constrains the dialog
+  const tooSmall = dlg.offsetWidth < 500 && window.innerWidth >= 768;
+  if (tooSmall) {
+    dlg.style.width = '90vw';
+    dlg.style.maxWidth = '90vw';
+  } else {
+    dlg.style.width = '';
+    dlg.style.maxWidth = '';
+  }
+}
+/** Remove any auto-open attributes to avoid double-open conflicts. */
+function removeAutoOpenAttributes() {
+  document.querySelectorAll('[data-bs-toggle="modal"][data-bs-target="#documentModal"]').forEach(el => {
+    el.removeAttribute('data-bs-toggle');
+    el.removeAttribute('data-bs-target');
+  });
+}
+/** Open modal programmatically only; dispose prior instance to avoid stale state. */
+function openDocumentInModal({ modalSelector, iframeSelector, title, blobUrl }) {
+  const modalEl = document.querySelector(modalSelector);
+  const iframe = document.querySelector(iframeSelector);
+  if (!modalEl || !iframe) {
+    console.warn('Modal or iframe not found:', modalSelector, iframeSelector);
+    return;
+  }
+
+  ensureModalSize(modalEl);
+
+  if (window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+    const prev = window.bootstrap.Modal.getInstance(modalEl);
+    if (prev) {
+      try { prev.hide(); } catch {}
+      try { prev.dispose(); } catch {}
+    }
+  }
+
+  iframe.src = blobUrl;
+  iframe.title = title || 'Document';
+
+  if (window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+    const instance = new window.bootstrap.Modal(modalEl, { backdrop: true, keyboard: true });
+    instance.show();
+  } else {
+    modalEl.classList.add('show');
+    modalEl.style.display = 'block';
+    document.body.classList.add('modal-open');
+  }
+
+  const cleanup = () => {
+    if (iframe) iframe.src = '';
+    URL.revokeObjectURL(blobUrl);
+    modalEl.removeEventListener('hidden.bs.modal', cleanup);
+    const dlg = modalEl.querySelector('.modal-dialog');
+    if (dlg) { dlg.style.width = ''; dlg.style.maxWidth = ''; }
+  };
+  modalEl.addEventListener('hidden.bs.modal', cleanup, { once: true });
+
+  const reinforceSize = () => ensureModalSize(modalEl);
+  modalEl.addEventListener('show.bs.modal', reinforceSize, { once: true });
+  modalEl.addEventListener('shown.bs.modal', reinforceSize, { once: true });
+}
+
+/* ---------- Row builder (now includes Account line) ---------- */
 function buildDocumentRow(doc) {
   const title = doc.Title || 'Untitled document';
   const category = doc.category || 'Unknown';
   const uploaded = doc.UploadDate || '';
+  const accountName = doc.accountName || 'Unknown Account';
   const showNew = isDocumentNew(uploaded);
 
+  // NOTE: Do not use data-bs-* attributes on triggers; JS opens the modal.
   const el = htmlToElement(`
     <div class="col-12 col-md-12 col-xl-12 col-xxl-12 document-row">
       <div class="app-card app-card-doc shadow-sm h-100">
@@ -1544,32 +1622,40 @@ function buildDocumentRow(doc) {
             <div class="col p-1">
               <div class="app-card-thumb-holder p-2 position-relative">
                 <span class="icon-holder"><i class="fas fa-file-alt text-file"></i></span>
-                ${showNew ? '<span class="badge bg-success position-absolute" style="top:5px;">NEW</span>' : ''}
-                <!-- Link mask triggers view -->
-                <a class="app-card-link-mask js-view-doc" href="#" aria-label="Open document" data-bs-toggle="modal" data-bs-target="#documentModal"></a>
+                ${showNew ? '<span class="badge bg-success position-absolute" style="top:8px;">NEW</span>' : ''}
+                <a href="javascript:void(0)" class="app-card-link-mask js-download-doc" aria-label="Click to open the document"></a>
               </div>
             </div>
-            <div class="col-8 p-3">
+            <div class="col-8 p-1">
               <div class="app-card-body p-1">
                 <h4 class="truncate mb-2">
-                  <a href="#" class="js-view-doc" data-bs-toggle="modal" data-bs-target="#documentModal">${title}</a>
+                  <a href="javascript:void(0)" class="js-view-doc">${title}</a>
                 </h4>
                 <div class="row">
-                  <div class="col-auto"><p class="truncate mb-0"><span class="text-muted">Category:</span> ${category}</p></div>
-                  <div class="col-auto"><p class="truncate mb-0"><span class="text-muted">Uploaded:</span> ${uploaded}</p></div>
+                  <div class="col-12">
+                    <p class="truncate mb-0"><span class="text-muted">Account:</span> ${accountName}</p>
+                  </div>
+                  <div class="col-auto">
+                    <p class="truncate mb-0"><span class="text-muted">Category:</span> ${category}</p>
+                  </div>
+                  <div class="col-auto">
+                    <p class="truncate mb-0"><span class="text-muted">Uploaded:</span> ${uploaded}</p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col p-3 justify-content-end d-sm-flex">
+            <div class="col p-3 d-sm-flex justify-content-end">
               <div class="row">
                 <div class="col-auto">
-                  <a class="btn app-btn-primary js-download-doc" href="#"><i class="fa fa-download"></i> Download</a>
+                  <a href="javascript:void(0)" class="btn app-btn-primary js-download-doc">
+                    <i class="fa fa-download"></i> Download
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div>  
     </div>`);
 
   // Attach data for handlers
@@ -1585,8 +1671,8 @@ function buildDocumentRow(doc) {
 const __docUIState = {
   allDocs: [],
   filteredDocs: [],
-  categoriesOrig: [],   // ['Council Tax', 'Housing', ...] (original casing)
-  categoriesLower: [],  // ['council tax', 'housing', ...] (lowercased for matching)
+  categoriesOrig: [],
+  categoriesLower: [],
   currentPage: 1,
   pageSize: 10,
   elements: {
@@ -1598,9 +1684,9 @@ const __docUIState = {
   }
 };
 
-/* ---------- Filter helpers (integrated & robust) ---------- */
+/* ---------- Filter helpers ---------- */
 function getCategoriesFromDocs(docs) {
-  const set = new Map(); // lower -> original
+  const set = new Map();
   docs.forEach(d => {
     const orig = (d.category || 'Unknown').trim();
     const lower = orig.toLowerCase();
@@ -1612,37 +1698,27 @@ function getCategoriesFromDocs(docs) {
     categoriesOrig: entries.map(([, orig]) => orig)
   };
 }
-
-/** Populate dropdown with categories + "All documents" option (value = '__all__'). */
 function populateCategoryFilter(selectEl) {
   const { categoriesOrig, categoriesLower } = __docUIState;
-
-  // Clear existing options
   selectEl.options.length = 0;
 
-  // "All documents" — default selected
   const allOpt = document.createElement('option');
   allOpt.value = ALL_VALUE;
-  allOpt.textContent = 'All Categories';
+  allOpt.textContent = 'All documents';
   allOpt.selected = true;
   allOpt.defaultSelected = true;
   selectEl.appendChild(allOpt);
 
-  // Category options: value = lowercased, label = original
   categoriesOrig.forEach((orig, idx) => {
     const opt = document.createElement('option');
-    opt.value = categoriesLower[idx];
+    opt.value = categoriesLower[idx]; // values lowercased; labels original
     opt.textContent = orig;
     selectEl.appendChild(opt);
   });
 
-  // Ensure selection
   forceSelect(selectEl, ALL_VALUE);
-  // Guard against external resets
   guardAgainstBlank(selectEl);
 }
-
-/** Force the <select> to show a specific value (or fallback to first option). */
 function forceSelect(selectEl, value) {
   const options = Array.from(selectEl.options || []);
   const idx = options.findIndex(o => o.value === value);
@@ -1657,8 +1733,6 @@ function forceSelect(selectEl, value) {
     selectEl.value = options[0]?.value || ALL_VALUE;
   }
 }
-
-/** Watch for external resets and re-assert a valid value (ALL_VALUE). */
 function guardAgainstBlank(selectEl) {
   const obs = new MutationObserver(() => {
     if (!selectEl.value || selectEl.selectedIndex === -1) {
@@ -1667,19 +1741,15 @@ function guardAgainstBlank(selectEl) {
   });
   obs.observe(selectEl, { attributes: true, attributeFilter: ['value'], childList: true });
 }
-
-/** Normalize filter to either ALL or a lowercased category present in data. */
 function normalizeFilter(val) {
   const v = (val || '').toLowerCase();
   if (v === ALL_VALUE || v === 'all') return ALL_VALUE;
   return __docUIState.categoriesLower.includes(v) ? v : ALL_VALUE;
 }
-
-/** Read initial filter from URL (?filter=...) or `defaultFilter`. */
 function getInitialFilter(defaultFilter = ALL_VALUE) {
   try {
     const qs = new URLSearchParams(window.location.search);
-    const fromUrl = qs.get('filter'); // may be category or 'all'
+    const fromUrl = qs.get('filter');
     return normalizeFilter(fromUrl || defaultFilter);
   } catch {
     return normalizeFilter(defaultFilter);
@@ -1694,10 +1764,8 @@ function sortDocsByDate(docs) {
     return dateB - dateA; // newest first
   });
 }
-
 function applyFilter(selectedLower) {
   const sel = normalizeFilter(selectedLower);
-  if (!__docUIState.elements.filter) return;
   forceSelect(__docUIState.elements.filter, sel);
 
   const docs = __docUIState.allDocs;
@@ -1707,12 +1775,10 @@ function applyFilter(selectedLower) {
 
   __docUIState.currentPage = 1;
 }
-
 function renderListPage() {
   const { list } = __docUIState.elements;
   const { filteredDocs, currentPage, pageSize } = __docUIState;
   if (!list) return;
-
   list.innerHTML = '';
 
   if (!filteredDocs || filteredDocs.length === 0) {
@@ -1727,10 +1793,8 @@ function renderListPage() {
   for (let i = startIdx; i < endIdx; i++) {
     fragment.appendChild(buildDocumentRow(filteredDocs[i]));
   }
-
   list.appendChild(fragment);
 }
-
 function renderPagination() {
   const { pager } = __docUIState.elements;
   const { filteredDocs, currentPage, pageSize } = __docUIState;
@@ -1776,9 +1840,7 @@ function renderPagination() {
     addPageItem('1', 1, { active: currentPage === 1 });
     if (start > 2) addEllipsis();
   }
-
   for (let p = start; p <= end; p++) addPageItem(String(p), p, { active: p === currentPage });
-
   if (end < totalPages) {
     if (end < totalPages - 1) addEllipsis();
     addPageItem(String(totalPages), totalPages, { active: currentPage === totalPages });
@@ -1830,12 +1892,14 @@ function wireInteractions() {
     pager.dataset.bound = 'true';
   }
 
-  // View (delegated on list)
+  // View — programmatic open only
   if (list && !list.dataset.viewBound) {
     list.addEventListener('click', function (e) {
       const viewBtn = e.target.closest('.js-view-doc');
       if (!viewBtn) return;
+
       e.preventDefault();
+      e.stopPropagation();
 
       const row = viewBtn.closest('.document-row') || viewBtn.closest('.col-12') || viewBtn.closest('.app-card') || viewBtn.closest('.row');
       const base64 = (row?.dataset?.base64) || '';
@@ -1848,36 +1912,24 @@ function wireInteractions() {
       const blob = base64ToBlob(base64);
       const url = URL.createObjectURL(blob);
 
-      const iframe = document.querySelector(modalContentSelector);
-      if (iframe) {
-        iframe.src = url;
-        iframe.title = title;
-      }
-
-      // Open modal programmatically (reliable even if already open)
-      const modalEl = document.querySelector(modalSelector);
-      if (modalEl && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
-        const instance = window.bootstrap.Modal.getOrCreateInstance(modalEl);
-        instance.show();
-      }
-
-      // Cleanup on close
-      if (modalEl) {
-        modalEl.addEventListener('hidden.bs.modal', () => {
-          if (iframe) iframe.src = '';
-          URL.revokeObjectURL(url);
-        }, { once: true });
-      }
+      openDocumentInModal({
+        modalSelector,
+        iframeSelector: modalContentSelector,
+        title,
+        blobUrl: url
+      });
     });
     list.dataset.viewBound = 'true';
   }
 
-  // Download (delegated on list)
+  // Download
   if (list && !list.dataset.downloadBound) {
     list.addEventListener('click', function (e) {
       const dlBtn = e.target.closest('.js-download-doc');
       if (!dlBtn) return;
+
       e.preventDefault();
+      e.stopPropagation();
 
       const row = dlBtn.closest('.document-row') || dlBtn.closest('.col-12') || dlBtn.closest('.app-card') || dlBtn.closest('.row');
       const base64 = (row?.dataset?.base64) || '';
@@ -1910,19 +1962,18 @@ function ensureFilterElement(selector, listEl) {
     selectEl = document.createElement('select');
     selectEl.className = 'form-select mb-3';
     selectEl.id = selector.replace(/^#/, '') || 'docCategoryFilter';
-    // insert before the list
+    // insert before list
     listEl.parentNode.insertBefore(selectEl, listEl);
   }
   return selectEl;
 }
-
 function ensurePagerElement(selector, listEl) {
   let pagerEl = document.querySelector(selector);
   if (!pagerEl) {
     pagerEl = document.createElement('div');
     pagerEl.id = selector.replace(/^#/, '') || 'documentsPagination';
     pagerEl.className = 'mt-3';
-    // insert after the list
+    // insert after list
     if (listEl.nextSibling) {
       listEl.parentNode.insertBefore(pagerEl, listEl.nextSibling);
     } else {
@@ -1934,22 +1985,28 @@ function ensurePagerElement(selector, listEl) {
 
 /* ---------- Exported entry point ---------- */
 /**
- * Render documents UI with integrated filter + pagination.
+ * Render documents UI with integrated accounts join + filter + pagination.
  * @param {Object} config
  * @param {string} config.container - Selector for list container (e.g., '#documentsList')
  * @param {string} [config.filterSelector='#docCategoryFilter'] - Dropdown selector
- * @param {string} [config.pagerSelector='#documentsPagination'] - Pagination container selector
- * @param {string} [config.dataUrl='data.json'] - Path to JSON with { mydocuments: [...] }
+ * @param {string} [config.pagerSelector='#documentsPagination'] - Pagination container
+ * @param {string} [config.dataUrl='data.json'] - Path to JSON with { mydocuments: [...] } and/or { accounts: [...] }
+ * @param {string|null} [config.accountsUrl=null] - Optional external accounts JSON path
+ * @param {string} [config.accountIdField='id'] - Field name in accounts for the ID to match mydocuments.accountid
+ * @param {string} [config.accountNameField='name'] - Field name in accounts for the Name to display
  * @param {number} [config.pageSize=10] - Items per page
  * @param {string} [config.modalSelector='#documentModal'] - Bootstrap modal selector
  * @param {string} [config.modalContentSelector='#documentModal iframe'] - Iframe inside modal
- * @param {string} [config.defaultFilter='__all__'] - Initial filter if URL doesn't provide one
+ * @param {string} [config.defaultFilter='__all__'] - Initial category filter if URL lacks ?filter=
  */
 export async function renderMyDocuments({
   container,
   filterSelector = '#docCategoryFilter',
   pagerSelector = '#documentsPagination',
   dataUrl = 'data.json',
+  accountsUrl = null,
+  accountIdField = 'id',
+  accountNameField = 'name',
   pageSize = 10,
   modalSelector = '#documentModal',
   modalContentSelector = '#documentModal iframe',
@@ -1972,37 +2029,70 @@ export async function renderMyDocuments({
   __docUIState.pageSize = Math.max(1, Number(pageSize) || 10);
 
   try {
-    const res = await fetch(dataUrl, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`Failed to fetch ${dataUrl}: ${res.status} ${res.statusText}`);
-    const data = await res.json();
+    // Fetch documents and accounts (accounts may be in a separate file or inside data.json)
+    const fetches = [ fetch(dataUrl, { cache: 'no-store' }) ];
+    if (accountsUrl) fetches.push(fetch(accountsUrl, { cache: 'no-store' }));
 
-    // Prepare docs and categories
-    let docs = Array.isArray(data.mydocuments) ? data.mydocuments : [];
-    docs = sortDocsByDate(docs); // newest first
+    const responses = await Promise.all(fetches);
+    const [docsRes, accountsRes] = responses;
+    if (!docsRes.ok) throw new Error(`Failed to fetch ${dataUrl}: ${docsRes.status} ${docsRes.statusText}`);
+
+    const docsData = await docsRes.json();
+    const accountsData = accountsRes && accountsRes.ok ? await accountsRes.json() : null;
+
+    let docs = Array.isArray(docsData.mydocuments) ? docsData.mydocuments : [];
+    // Accounts may come from separate file (accountsUrl) or from same file (docsData.accounts)
+    let accounts =
+      (accountsData && (accountsData.accounts || accountsData.Accounts || accountsData.data)) ||
+      docsData.accounts ||
+      [];
+
+    if (!Array.isArray(accounts)) accounts = [];
+
+    // Build accounts lookup map: key as trimmed string of accountIdField; value: accountNameField
+    const accountMap = new Map();
+    for (const acc of accounts) {
+      const key = acc && acc[accountIdField] != null ? String(acc[accountIdField]).trim() : null;
+      const val = acc && acc[accountNameField] != null ? String(acc[accountNameField]).trim() : '';
+      if (key) accountMap.set(key, val);
+    }
+
+    // Attach accountName to each document
+    docs.forEach(doc => {
+      const key = doc && doc.accountid != null ? String(doc.accountid).trim() : null;
+      doc.accountName = (key && accountMap.has(key)) ? accountMap.get(key) : 'Unknown Account';
+    });
+
+    // Sort newest first
+    docs = sortDocsByDate(docs);
+
     __docUIState.allDocs = docs.slice();
 
+    // Prepare categories
     const { categoriesLower, categoriesOrig } = getCategoriesFromDocs(__docUIState.allDocs);
     __docUIState.categoriesLower = categoriesLower;
     __docUIState.categoriesOrig = categoriesOrig;
 
-    // Populate filter dropdown
+    // Populate filter
     populateCategoryFilter(filterEl);
 
-    // Determine initial filter (URL or default) and apply
+    // Determine initial filter, apply, and render
     const initialFilter = getInitialFilter(defaultFilter);
     applyFilter(initialFilter);
 
-    // Render UI and bind events
+    // Remove any stray data-bs auto-open attributes to avoid modal conflicts
+    removeAutoOpenAttributes();
+
     renderListPage();
     renderPagination();
     wireInteractions();
   } catch (err) {
     console.error(err);
-    listEl.innerHTML = '<p class="text-danger">There was a problem loading your documents.</p>';
-    // Bind events anyway (in case a later retry is added)
+    listEl.innerHTML = '<p class="text-danger">There was a problem loading your documents or accounts.</p>';
     wireInteractions();
   }
 }
+
 
 /**
  * Display MyDocuments banner
