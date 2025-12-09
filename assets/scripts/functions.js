@@ -1463,11 +1463,546 @@ export function getLeaseInfoForYear(
 
 
 
+/* Render MyDocuments */
 
+const ALL_VALUE = '__all__';
 
+/* ---------- Date helpers ---------- */
+function parseUploadDate(dateStr) {
+  if (!dateStr || typeof dateStr !== 'string') return null;
+  const s = dateStr.trim();
+  // ISO yyyy-mm-dd or yyyy/mm/dd
+  if (/^\d{4}[-/]\d{2}[-/]\d{2}$/.test(s)) {
+    const [y, m, d] = s.split(/[-/]/).map(Number);
+    return new Date(y, m - 1, d);
+  }
+  // UK dd/mm/yyyy
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
+    const [d, m, y] = s.split('/').map(Number);
+    return new Date(y, m - 1, d);
+  }
+  const fallback = new Date(s);
+  return isNaN(fallback.getTime()) ? null : fallback;
+}
 
+function addMonths(date, months) {
+  const d = new Date(date.getTime());
+  const targetMonth = d.getMonth() + months;
+  const lastOfTarget = new Date(d.getFullYear(), targetMonth + 1, 0);
+  d.setMonth(targetMonth);
+  if (d.getDate() > lastOfTarget.getDate()) d.setDate(lastOfTarget.getDate());
+  return d;
+}
 
+function isDocumentNew(uploadDateStr) {
+  const uploadDate = parseUploadDate(uploadDateStr);
+  if (!uploadDate) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const threshold = addMonths(uploadDate, 3);
+  return threshold >= today;
+}
 
+/* ---------- Utilities ---------- */
+function base64ToBlob(base64, mimeType = 'application/pdf') {
+  const cleaned = (base64 || '').replace(/^data:.*;base64,/, '');
+  if (!cleaned) return new Blob([], { type: mimeType });
+  const byteCharacters = atob(cleaned);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
+  const byteArray = new Uint8Array(byteNumbers);
+  return new Blob([byteArray], { type: mimeType });
+}
+
+function htmlToElement(html) {
+  const template = document.createElement('template');
+  template.innerHTML = html.trim();
+  return template.content.firstElementChild;
+}
+
+function toSafeFilename(name, ext = '.pdf') {
+  const base = (name || 'document')
+    .replace(/[\\/:*?"<>|]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .substring(0, 120);
+  return base.toLowerCase().endsWith(ext) ? base : base + ext;
+}
+
+/* ---------- Row builder ---------- */
+function buildDocumentRow(doc) {
+  const title = doc.Title || 'Untitled document';
+  const category = doc.category || 'Unknown';
+  const uploaded = doc.UploadDate || '';
+  const showNew = isDocumentNew(uploaded);
+
+  const el = htmlToElement(`
+    <div class="col-12 col-md-12 col-xl-12 col-xxl-12 document-row">
+      <div class="app-card app-card-doc shadow-sm h-100">
+        <div class="container">
+          <div class="row p-2">
+            <div class="col p-1">
+              <div class="app-card-thumb-holder p-2 position-relative">
+                <span class="icon-holder"><i class="fas fa-file-alt text-file"></i></span>
+                ${showNew ? '<span class="badge bg-success position-absolute" style="top:5px;">NEW</span>' : ''}
+                <!-- Link mask triggers view -->
+                <a class="app-card-link-mask js-view-doc" href="#" aria-label="Open document" data-bs-toggle="modal" data-bs-target="#documentModal"></a>
+              </div>
+            </div>
+            <div class="col-8 p-3">
+              <div class="app-card-body p-1">
+                <h4 class="truncate mb-2">
+                  <a href="#" class="js-view-doc" data-bs-toggle="modal" data-bs-target="#documentModal">${title}</a>
+                </h4>
+                <div class="row">
+                  <div class="col-auto"><p class="truncate mb-0"><span class="text-muted">Category:</span> ${category}</p></div>
+                  <div class="col-auto"><p class="truncate mb-0"><span class="text-muted">Uploaded:</span> ${uploaded}</p></div>
+                </div>
+              </div>
+            </div>
+            <div class="col p-3 justify-content-end d-sm-flex">
+              <div class="row">
+                <div class="col-auto">
+                  <a class="btn app-btn-primary js-download-doc" href="#"><i class="fa fa-download"></i> Download</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`);
+
+  // Attach data for handlers
+  el.dataset.base64 = doc.base64 || '';
+  el.dataset.title = title;
+  el.dataset.category = category;
+  el.dataset.uploadDate = uploaded;
+
+  return el;
+}
+
+/* ---------- State ---------- */
+const __docUIState = {
+  allDocs: [],
+  filteredDocs: [],
+  categoriesOrig: [],   // ['Council Tax', 'Housing', ...] (original casing)
+  categoriesLower: [],  // ['council tax', 'housing', ...] (lowercased for matching)
+  currentPage: 1,
+  pageSize: 10,
+  elements: {
+    list: null,
+    filter: null,
+    pager: null,
+    modalSelector: '#documentModal',
+    modalContentSelector: '#documentModal iframe'
+  }
+};
+
+/* ---------- Filter helpers (integrated & robust) ---------- */
+function getCategoriesFromDocs(docs) {
+  const set = new Map(); // lower -> original
+  docs.forEach(d => {
+    const orig = (d.category || 'Unknown').trim();
+    const lower = orig.toLowerCase();
+    if (!set.has(lower)) set.set(lower, orig);
+  });
+  const entries = Array.from(set.entries()).sort((a, b) => a[1].localeCompare(b[1], undefined, { sensitivity: 'base' }));
+  return {
+    categoriesLower: entries.map(([lower]) => lower),
+    categoriesOrig: entries.map(([, orig]) => orig)
+  };
+}
+
+/** Populate dropdown with categories + "All documents" option (value = '__all__'). */
+function populateCategoryFilter(selectEl) {
+  const { categoriesOrig, categoriesLower } = __docUIState;
+
+  // Clear existing options
+  selectEl.options.length = 0;
+
+  // "All documents" — default selected
+  const allOpt = document.createElement('option');
+  allOpt.value = ALL_VALUE;
+  allOpt.textContent = 'All Categories';
+  allOpt.selected = true;
+  allOpt.defaultSelected = true;
+  selectEl.appendChild(allOpt);
+
+  // Category options: value = lowercased, label = original
+  categoriesOrig.forEach((orig, idx) => {
+    const opt = document.createElement('option');
+    opt.value = categoriesLower[idx];
+    opt.textContent = orig;
+    selectEl.appendChild(opt);
+  });
+
+  // Ensure selection
+  forceSelect(selectEl, ALL_VALUE);
+  // Guard against external resets
+  guardAgainstBlank(selectEl);
+}
+
+/** Force the <select> to show a specific value (or fallback to first option). */
+function forceSelect(selectEl, value) {
+  const options = Array.from(selectEl.options || []);
+  const idx = options.findIndex(o => o.value === value);
+  if (idx >= 0) {
+    options.forEach(o => { o.selected = false; o.defaultSelected = false; });
+    options[idx].selected = true;
+    options[idx].defaultSelected = true;
+    selectEl.selectedIndex = idx;
+    selectEl.value = value;
+  } else {
+    selectEl.selectedIndex = 0;
+    selectEl.value = options[0]?.value || ALL_VALUE;
+  }
+}
+
+/** Watch for external resets and re-assert a valid value (ALL_VALUE). */
+function guardAgainstBlank(selectEl) {
+  const obs = new MutationObserver(() => {
+    if (!selectEl.value || selectEl.selectedIndex === -1) {
+      forceSelect(selectEl, ALL_VALUE);
+    }
+  });
+  obs.observe(selectEl, { attributes: true, attributeFilter: ['value'], childList: true });
+}
+
+/** Normalize filter to either ALL or a lowercased category present in data. */
+function normalizeFilter(val) {
+  const v = (val || '').toLowerCase();
+  if (v === ALL_VALUE || v === 'all') return ALL_VALUE;
+  return __docUIState.categoriesLower.includes(v) ? v : ALL_VALUE;
+}
+
+/** Read initial filter from URL (?filter=...) or `defaultFilter`. */
+function getInitialFilter(defaultFilter = ALL_VALUE) {
+  try {
+    const qs = new URLSearchParams(window.location.search);
+    const fromUrl = qs.get('filter'); // may be category or 'all'
+    return normalizeFilter(fromUrl || defaultFilter);
+  } catch {
+    return normalizeFilter(defaultFilter);
+  }
+}
+
+/* ---------- Sorting / Filtering / Rendering ---------- */
+function sortDocsByDate(docs) {
+  return docs.sort((a, b) => {
+    const dateA = parseUploadDate(a.UploadDate) || new Date(0);
+    const dateB = parseUploadDate(b.UploadDate) || new Date(0);
+    return dateB - dateA; // newest first
+  });
+}
+
+function applyFilter(selectedLower) {
+  const sel = normalizeFilter(selectedLower);
+  if (!__docUIState.elements.filter) return;
+  forceSelect(__docUIState.elements.filter, sel);
+
+  const docs = __docUIState.allDocs;
+  __docUIState.filteredDocs = (sel === ALL_VALUE)
+    ? docs.slice()
+    : docs.filter(d => (d.category || 'Unknown').trim().toLowerCase() === sel);
+
+  __docUIState.currentPage = 1;
+}
+
+function renderListPage() {
+  const { list } = __docUIState.elements;
+  const { filteredDocs, currentPage, pageSize } = __docUIState;
+  if (!list) return;
+
+  list.innerHTML = '';
+
+  if (!filteredDocs || filteredDocs.length === 0) {
+    list.innerHTML = '<p class="text-muted">No documents available.</p>';
+    return;
+  }
+
+  const startIdx = (currentPage - 1) * pageSize;
+  const endIdx = Math.min(startIdx + pageSize, filteredDocs.length);
+  const fragment = document.createDocumentFragment();
+
+  for (let i = startIdx; i < endIdx; i++) {
+    fragment.appendChild(buildDocumentRow(filteredDocs[i]));
+  }
+
+  list.appendChild(fragment);
+}
+
+function renderPagination() {
+  const { pager } = __docUIState.elements;
+  const { filteredDocs, currentPage, pageSize } = __docUIState;
+  if (!pager) return;
+
+  const total = filteredDocs.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  const nav = document.createElement('nav');
+  nav.setAttribute('aria-label', 'Documents pagination');
+
+  const ul = document.createElement('ul');
+  ul.className = 'pagination mb-0';
+
+  const addPageItem = (label, page, { disabled = false, active = false, ariaLabel = null } = {}) => {
+    const li = document.createElement('li');
+    li.className = `page-item${disabled ? ' disabled' : ''}${active ? ' active' : ''}`;
+    const a = document.createElement('a');
+    a.className = 'page-link js-page';
+    a.href = '#';
+    a.textContent = label;
+    if (ariaLabel) a.setAttribute('aria-label', ariaLabel);
+    if (!disabled) a.dataset.page = String(page);
+    li.appendChild(a);
+    ul.appendChild(li);
+  };
+
+  const addEllipsis = () => {
+    const li = document.createElement('li');
+    li.className = 'page-item disabled';
+    li.innerHTML = '<span class="page-link">&hellip;</span>';
+    ul.appendChild(li);
+  };
+
+  addPageItem('«', currentPage - 1, { disabled: currentPage === 1, ariaLabel: 'Previous page' });
+
+  const maxButtons = 7;
+  let start = Math.max(1, currentPage - 3);
+  let end = Math.min(totalPages, start + maxButtons - 1);
+  if (end - start + 1 < maxButtons) start = Math.max(1, end - maxButtons + 1);
+
+  if (start > 1) {
+    addPageItem('1', 1, { active: currentPage === 1 });
+    if (start > 2) addEllipsis();
+  }
+
+  for (let p = start; p <= end; p++) addPageItem(String(p), p, { active: p === currentPage });
+
+  if (end < totalPages) {
+    if (end < totalPages - 1) addEllipsis();
+    addPageItem(String(totalPages), totalPages, { active: currentPage === totalPages });
+  }
+
+  addPageItem('»', currentPage + 1, { disabled: currentPage === totalPages, ariaLabel: 'Next page' });
+
+  nav.appendChild(ul);
+
+  const info = document.createElement('p');
+  info.className = 'mt-2 text-muted small mb-0';
+  info.textContent = `Showing page ${currentPage} of ${totalPages} (${total} document${total === 1 ? '' : 's'})`;
+
+  pager.innerHTML = '';
+  pager.appendChild(nav);
+  pager.appendChild(info);
+}
+
+/* ---------- Interactions ---------- */
+function wireInteractions() {
+  const { filter, pager, list, modalSelector, modalContentSelector } = __docUIState.elements;
+
+  // Filter change
+  if (filter && !filter.dataset.bound) {
+    filter.addEventListener('change', () => {
+      const selected = normalizeFilter(filter.value);
+      applyFilter(selected);
+      renderListPage();
+      renderPagination();
+    });
+    filter.dataset.bound = 'true';
+  }
+
+  // Pagination click
+  if (pager && !pager.dataset.bound) {
+    pager.addEventListener('click', (e) => {
+      const link = e.target.closest('.js-page');
+      if (!link || !link.dataset.page) return;
+      e.preventDefault();
+      const page = Number(link.dataset.page);
+      const totalPages = Math.max(1, Math.ceil(__docUIState.filteredDocs.length / __docUIState.pageSize));
+      if (!isNaN(page) && page >= 1 && page <= totalPages) {
+        __docUIState.currentPage = page;
+        renderListPage();
+        renderPagination();
+        __docUIState.elements.list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+    pager.dataset.bound = 'true';
+  }
+
+  // View (delegated on list)
+  if (list && !list.dataset.viewBound) {
+    list.addEventListener('click', function (e) {
+      const viewBtn = e.target.closest('.js-view-doc');
+      if (!viewBtn) return;
+      e.preventDefault();
+
+      const row = viewBtn.closest('.document-row') || viewBtn.closest('.col-12') || viewBtn.closest('.app-card') || viewBtn.closest('.row');
+      const base64 = (row?.dataset?.base64) || '';
+      const title = (row?.dataset?.title) || 'Document';
+      if (!base64) {
+        console.warn('No base64 found for this document.');
+        return;
+      }
+
+      const blob = base64ToBlob(base64);
+      const url = URL.createObjectURL(blob);
+
+      const iframe = document.querySelector(modalContentSelector);
+      if (iframe) {
+        iframe.src = url;
+        iframe.title = title;
+      }
+
+      // Open modal programmatically (reliable even if already open)
+      const modalEl = document.querySelector(modalSelector);
+      if (modalEl && window.bootstrap && typeof window.bootstrap.Modal === 'function') {
+        const instance = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+        instance.show();
+      }
+
+      // Cleanup on close
+      if (modalEl) {
+        modalEl.addEventListener('hidden.bs.modal', () => {
+          if (iframe) iframe.src = '';
+          URL.revokeObjectURL(url);
+        }, { once: true });
+      }
+    });
+    list.dataset.viewBound = 'true';
+  }
+
+  // Download (delegated on list)
+  if (list && !list.dataset.downloadBound) {
+    list.addEventListener('click', function (e) {
+      const dlBtn = e.target.closest('.js-download-doc');
+      if (!dlBtn) return;
+      e.preventDefault();
+
+      const row = dlBtn.closest('.document-row') || dlBtn.closest('.col-12') || dlBtn.closest('.app-card') || dlBtn.closest('.row');
+      const base64 = (row?.dataset?.base64) || '';
+      const title = (row?.dataset?.title) || 'document';
+      if (!base64) {
+        console.warn('No base64 found for this document.');
+        return;
+      }
+
+      const blob = base64ToBlob(base64);
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = toSafeFilename(title, '.pdf');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    list.dataset.downloadBound = 'true';
+  }
+}
+
+/* ---------- Ensurers ---------- */
+function ensureFilterElement(selector, listEl) {
+  let selectEl = document.querySelector(selector);
+  if (!selectEl) {
+    selectEl = document.createElement('select');
+    selectEl.className = 'form-select mb-3';
+    selectEl.id = selector.replace(/^#/, '') || 'docCategoryFilter';
+    // insert before the list
+    listEl.parentNode.insertBefore(selectEl, listEl);
+  }
+  return selectEl;
+}
+
+function ensurePagerElement(selector, listEl) {
+  let pagerEl = document.querySelector(selector);
+  if (!pagerEl) {
+    pagerEl = document.createElement('div');
+    pagerEl.id = selector.replace(/^#/, '') || 'documentsPagination';
+    pagerEl.className = 'mt-3';
+    // insert after the list
+    if (listEl.nextSibling) {
+      listEl.parentNode.insertBefore(pagerEl, listEl.nextSibling);
+    } else {
+      listEl.parentNode.appendChild(pagerEl);
+    }
+  }
+  return pagerEl;
+}
+
+/* ---------- Exported entry point ---------- */
+/**
+ * Render documents UI with integrated filter + pagination.
+ * @param {Object} config
+ * @param {string} config.container - Selector for list container (e.g., '#documentsList')
+ * @param {string} [config.filterSelector='#docCategoryFilter'] - Dropdown selector
+ * @param {string} [config.pagerSelector='#documentsPagination'] - Pagination container selector
+ * @param {string} [config.dataUrl='data.json'] - Path to JSON with { mydocuments: [...] }
+ * @param {number} [config.pageSize=10] - Items per page
+ * @param {string} [config.modalSelector='#documentModal'] - Bootstrap modal selector
+ * @param {string} [config.modalContentSelector='#documentModal iframe'] - Iframe inside modal
+ * @param {string} [config.defaultFilter='__all__'] - Initial filter if URL doesn't provide one
+ */
+export async function renderMyDocuments({
+  container,
+  filterSelector = '#docCategoryFilter',
+  pagerSelector = '#documentsPagination',
+  dataUrl = 'data.json',
+  pageSize = 10,
+  modalSelector = '#documentModal',
+  modalContentSelector = '#documentModal iframe',
+  defaultFilter = ALL_VALUE
+} = {}) {
+  const listEl = document.querySelector(container);
+  if (!listEl) {
+    console.error(`Container not found: ${container}`);
+    return;
+  }
+
+  const filterEl = ensureFilterElement(filterSelector, listEl);
+  const pagerEl = ensurePagerElement(pagerSelector, listEl);
+
+  __docUIState.elements.list = listEl;
+  __docUIState.elements.filter = filterEl;
+  __docUIState.elements.pager = pagerEl;
+  __docUIState.elements.modalSelector = modalSelector;
+  __docUIState.elements.modalContentSelector = modalContentSelector;
+  __docUIState.pageSize = Math.max(1, Number(pageSize) || 10);
+
+  try {
+    const res = await fetch(dataUrl, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Failed to fetch ${dataUrl}: ${res.status} ${res.statusText}`);
+    const data = await res.json();
+
+    // Prepare docs and categories
+    let docs = Array.isArray(data.mydocuments) ? data.mydocuments : [];
+    docs = sortDocsByDate(docs); // newest first
+    __docUIState.allDocs = docs.slice();
+
+    const { categoriesLower, categoriesOrig } = getCategoriesFromDocs(__docUIState.allDocs);
+    __docUIState.categoriesLower = categoriesLower;
+    __docUIState.categoriesOrig = categoriesOrig;
+
+    // Populate filter dropdown
+    populateCategoryFilter(filterEl);
+
+    // Determine initial filter (URL or default) and apply
+    const initialFilter = getInitialFilter(defaultFilter);
+    applyFilter(initialFilter);
+
+    // Render UI and bind events
+    renderListPage();
+    renderPagination();
+    wireInteractions();
+  } catch (err) {
+    console.error(err);
+    listEl.innerHTML = '<p class="text-danger">There was a problem loading your documents.</p>';
+    // Bind events anyway (in case a later retry is added)
+    wireInteractions();
+  }
+}
 
 
 
